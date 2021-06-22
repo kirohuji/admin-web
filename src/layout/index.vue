@@ -7,13 +7,17 @@
     />
     <div :class="{ 'fixed-header': fixedHeader }">
       <navbar />
-      <tags-view v-if="needTagsView" />
     </div>
 
     <!-- main -->
     <div :class="{ hasTagsView: needTagsView }" class="main-container">
       <sidebar class="sidebar-container" />
-      <app-main />
+      <app-main>
+        <tags-view v-if="needTagsView" />
+        <div>
+          <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+        </div>
+      </app-main>
       <right-panel v-if="showSettings">
         <settings />
       </right-panel>
@@ -23,6 +27,7 @@
 
 <script>
 import RightPanel from "@/components/RightPanel";
+import Breadcrumb from "@/components/Breadcrumb";
 import { AppMain, Navbar, Settings, Sidebar, TagsView } from "./components";
 import ResizeMixin from "./mixin/ResizeHandler";
 import { mapState } from "vuex";
@@ -30,6 +35,7 @@ import { mapState } from "vuex";
 export default {
   name: "Layout",
   components: {
+    Breadcrumb,
     AppMain,
     Navbar,
     RightPanel,
@@ -66,7 +72,6 @@ export default {
 <style lang="scss" scoped>
 @import "~@/styles/mixin.scss";
 @import "~@/styles/variables.scss";
-
 .app-wrapper {
   @include clearfix;
   position: relative;
