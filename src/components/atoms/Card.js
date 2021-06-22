@@ -1,5 +1,13 @@
 export default {
   render() {
-    return <div>{this.$scopedSlot.default()}</div>;
+    return (
+      <div
+        style={{
+          background: '#fff'
+        }}
+      >
+        {this.$scopedSlots.default()}
+      </div>
+    )
   }
-};
+}
