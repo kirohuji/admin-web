@@ -2,7 +2,20 @@
   <el-dialog :visible.sync="visible" :before-close="close" v-bind="$attrs" custom-class="base-dialog">
     <slot />
     <template v-slot:title>
-      <div class="title">{{ $attrs.title }}</div>
+      <div style="position: relative;">
+        <div
+          style="
+            position: absolute;
+            left: 2px;
+            top: 20px;
+            color: #1684DD;
+        "
+        >
+          <i class="el-icon-arrow-left" />
+          <span>返回</span>
+        </div>
+        <div class="title">{{ $attrs.title }}</div>
+      </div>
     </template>
     <template v-slot:footer>
       <slot name="footer">

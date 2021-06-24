@@ -134,7 +134,7 @@ export default {
           {
             prop: 'operation',
             label: '操作',
-            width: '100',
+            width: '150',
             scopedSlots: true
           }
         ]

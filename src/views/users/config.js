@@ -42,6 +42,34 @@ export default {
         required: true
       },
       {
+        label: '所属角色',
+        prop: 'date',
+        component: 'radio-border-group',
+        size: 'small',
+        style: 'width: 598px',
+        options: [
+          {
+            label: '卫健信息科长'
+          },
+          {
+            label: '疾控科科长'
+          },
+          {
+            label: '卫健局局长'
+          },
+          {
+            label: '基位科长'
+          },
+          {
+            label: '卫健局局长'
+          },
+          {
+            label: '基位科长1'
+          }
+        ],
+        required: true
+      },
+      {
         label: '备注',
         prop: 'date',
         component: 'input',
@@ -50,6 +78,28 @@ export default {
         style: 'width: 400px',
         size: 'small',
         required: true
+      },
+      {
+        label: '用户成员',
+        prop: 'group',
+        component: 'select',
+        import: true,
+        multiple: true,
+        'collapse-tags': true,
+        placeholder: '请选择',
+        // style: 'width: 400px',
+        size: 'small',
+        required: true,
+        options: [
+          {
+            value: 1,
+            label: '卫健信息科长'
+          },
+          {
+            value: 2,
+            label: '疾控科科长'
+          }
+        ]
       },
       {
         label: '审核时间',
