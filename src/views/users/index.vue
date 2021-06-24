@@ -1,7 +1,7 @@
 <template>
   <div>
     <Card style="padding: 14px;padding-bottom: 0">
-      <DataSearchForm :forms="forms" style="justify-content: space-between;">
+      <DataSearchForm :forms="config.search" label-position="right" style="justify-content: space-between;">
         <template v-slot:right>
           <el-button>新建活动</el-button>
         </template>
@@ -11,52 +11,36 @@
       <DataTable v-bind="table" style="padding: 0">
         <template v-slot:operation>
           <div>
-            <router-link to="/warning/list/detail"><el-link type="primary">编辑</el-link></router-link>
-            <router-link to="/warning/list/detail"><el-link type="primary">禁用</el-link></router-link>
+            <el-link type="primary" @click="$refs.baseDialog.open()">编辑</el-link>
+            <el-link type="primary">禁用</el-link>
           </div>
         </template>
       </DataTable>
     </Card>
+    <BaseDialog ref="baseDialog" title="新增用户">
+      <DataForm :forms="config.form" label-position="right" />
+    </BaseDialog>
   </div>
 </template>
 
 <script>
 import DataTable from '@/components/organisms/DataTable'
 import DataSearchForm from '@/components/organisms/DataSearchForm'
+import DataForm from '@/components/organisms/DataForm'
+import BaseDialog from '@/components/molecules/BaseDialog.vue'
 import Card from '@/components/atoms/Card'
+import config from './config'
 export default {
   components: {
     Card,
     DataTable,
-    DataSearchForm
+    DataSearchForm,
+    DataForm,
+    BaseDialog
   },
   data() {
     return {
-      forms: {
-        col: 2,
-        fields: [
-          {
-            label: '预警时间',
-            prop: 'date',
-            component: 'date-picker',
-            type: 'datetime',
-            placeholder: '选择日期',
-            'value-format': 'yyyy-MM-dd HH:mm',
-            format: 'yyyy-MM-dd HH:mm',
-            size: 'small'
-          },
-          {
-            label: '审核时间',
-            prop: 'aduit',
-            component: 'date-picker',
-            type: 'datetime',
-            placeholder: '选择日期',
-            'value-format': 'yyyy-MM-dd HH:mm',
-            format: 'yyyy-MM-dd HH:mm',
-            size: 'small'
-          }
-        ]
-      },
+      config: config,
       table: {
         data: [
           {

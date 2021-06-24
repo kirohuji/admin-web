@@ -1,30 +1,47 @@
 <template>
   <div>
-    <Card style="padding: 14px;">
-      <DataTable v-bind="table">
+    <Card style="padding: 14px;padding-bottom: 0">
+      <DataSearchForm :forms="config.search" label-position="right" style="justify-content: space-between;">
+        <template v-slot:right>
+          <el-button>新建活动</el-button>
+        </template>
+      </DataSearchForm>
+    </Card>
+    <Card style="padding: 14px;padding-top: 0">
+      <DataTable v-bind="table" style="padding: 0">
         <template v-slot:operation>
           <div>
-            <router-link to="/warning/list/detail"><el-link type="primary">编辑</el-link></router-link>
-            <router-link to="/warning/list/detail"><el-link type="primary">禁用</el-link></router-link>
+            <el-link type="primary" @click="$refs.baseDialog.open()">授权</el-link>
+            <el-link type="primary">编辑</el-link>
+            <el-link type="primary">删除</el-link>
           </div>
         </template>
       </DataTable>
     </Card>
+    <BaseDialog ref="baseDialog" title="新增用户">
+      <DataForm :forms="config.form" label-position="right" />
+    </BaseDialog>
   </div>
 </template>
 
 <script>
 import DataTable from '@/components/organisms/DataTable'
-// import DataSearchForm from '@/components/organisms/DataSearchForm'
+import DataSearchForm from '@/components/organisms/DataSearchForm'
+import DataForm from '@/components/organisms/DataForm'
+import BaseDialog from '@/components/molecules/BaseDialog.vue'
 import Card from '@/components/atoms/Card'
+import config from './config'
 export default {
   components: {
     Card,
-    DataTable
-    // DataSearchForm
+    DataTable,
+    DataSearchForm,
+    DataForm,
+    BaseDialog
   },
   data() {
     return {
+      config: config,
       table: {
         data: [
           {
