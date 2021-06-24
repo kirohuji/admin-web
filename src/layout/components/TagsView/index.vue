@@ -12,7 +12,7 @@
         @click.middle.native="!isAffix(tag) ? closeSelectedTag(tag) : ''"
         @contextmenu.prevent.native="openMenu(tag, $event)"
       >
-        <span>{{ tag.title }}</span>
+        <el-radio v-model="isSelected" :label="tag.name">{{ tag.title }}</el-radio>
         <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
     </scroll-pane>
@@ -36,6 +36,7 @@ export default {
   data() {
     return {
       visible: false,
+      isSelected: 0,
       top: 0,
       left: 0,
       selectedTag: {},
@@ -51,8 +52,9 @@ export default {
     }
   },
   watch: {
-    $route() {
+    $route(val) {
       this.addTags()
+      this.isSelected = val.name
       this.moveToCurrentTag()
     },
     visible(value) {
@@ -112,6 +114,7 @@ export default {
       return false
     },
     moveToCurrentTag() {
+      console.log('666')
       const tags = this.$refs.tag
       this.$nextTick(() => {
         for (const tag of tags) {
@@ -137,6 +140,7 @@ export default {
       })
     },
     closeSelectedTag(view) {
+      console.log('点击')
       this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
         if (this.isActive(view)) {
           this.toLastView(visitedViews, view)
@@ -173,6 +177,7 @@ export default {
       }
     },
     openMenu(tag, e) {
+      console.log('666')
       const menuMinWidth = 105
       const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
       const offsetWidth = this.$el.offsetWidth // container width
@@ -201,7 +206,7 @@ export default {
 
 <style lang="scss" scoped>
 .tags-view-container {
-    height:50px;
+    height: 40px;
     width: 100%;
     padding: 0px;
     // background: #fff;
@@ -213,8 +218,8 @@ export default {
             display: inline-block;
             position: relative;
             cursor: pointer;
-            height: 50px;
-            line-height: 50px;
+            height: 40px;
+            line-height: 40px;
             width: 143px;
             color: #495060;
             // background: #fff;
@@ -237,19 +242,19 @@ export default {
                 // color: #fff;
                 // border-color: #42b983;
             }
-            &::before {
-                content: '';
-                position: absolute;
-                top: 4%;
-                left: -8px;
-                background: #fff;
-                display: inline-block;
-                width: 14px;
-                height: 14px;
-                border-radius: 50%;
-                position: relative;
-                margin-right: 2px;
-            }
+            // &::before {
+            //     content: '';
+            //     position: absolute;
+            //     top: 4%;
+            //     left: -8px;
+            //     background: #fff;
+            //     display: inline-block;
+            //     width: 14px;
+            //     height: 14px;
+            //     border-radius: 50%;
+            //     position: relative;
+            //     margin-right: 2px;
+            // }
         }
     }
     .contextmenu {

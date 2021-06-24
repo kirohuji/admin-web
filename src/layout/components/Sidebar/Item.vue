@@ -18,14 +18,18 @@ export default {
 
     if (icon) {
       if (icon.includes('el-icon')) {
-        vnodes.push(<i class={[icon, 'sub-el-icon']} />)
+        vnodes.push(<i class={[icon, 'sub-el-icon']} style='font-size: 16px' />)
       } else {
-        vnodes.push(<svg-icon icon-class={icon}/>)
+        vnodes.push(<svg-icon icon-class={icon} style='font-size: 16px' />)
       }
     }
 
     if (title) {
-      vnodes.push(<span slot='title'>{(title)}</span>)
+      vnodes.push(
+        <span slot='title' style='font-size: 16px'>
+          {title}
+        </span>
+      )
     }
     return vnodes
   }
@@ -34,8 +38,8 @@ export default {
 
 <style scoped>
 .sub-el-icon {
-  color: currentColor;
-  width: 1em;
-  height: 1em;
+    color: currentColor;
+    width: 1em;
+    height: 1em;
 }
 </style>

@@ -7,10 +7,7 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -39,89 +36,75 @@ import nestedRouter from './modules/nested'
  * all roles can be accessed
  */
 export const constantRoutes = [
-    {
-        path: '/redirect',
-        component: Layout,
-        hidden: true,
-        children: [
-            {
-                path: '/redirect/:path(.*)',
-                component: () => import('@/views/redirect/index'),
-            },
-        ],
+  {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path(.*)',
+        component: () => import('@/views/redirect/index')
+      }
+    ]
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
+  {
+    path: '/auth-redirect',
+    component: () => import('@/views/login/auth-redirect'),
+    hidden: true
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/error-page/404'),
+    hidden: true
+  },
+  {
+    path: '/401',
+    component: () => import('@/views/error-page/401'),
+    hidden: true
+  },
+  /** 首页 */
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   redirect: '/dashboard',
+  //   children: [
+  //     {
+  //       path: 'dashboard',
+  //       component: () => import('@/views/dashboard/index'),
+  //       name: 'Dashboard',
+  //       meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+  //     }
+  //   ]
+  // },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/users',
+    name: 'users',
+    meta: {
+      title: '用户中心',
+      icon: 'table'
     },
-    {
-        path: '/login',
-        component: () => import('@/views/login/index'),
-        hidden: true,
-    },
-    {
-        path: '/auth-redirect',
-        component: () => import('@/views/login/auth-redirect'),
-        hidden: true,
-    },
-    {
-        path: '/404',
-        component: () => import('@/views/error-page/404'),
-        hidden: true,
-    },
-    {
-        path: '/401',
-        component: () => import('@/views/error-page/401'),
-        hidden: true,
-    },
-    {
-        path: '/',
-        component: Layout,
-        redirect: '/dashboard',
-        children: [
-            {
-                path: 'dashboard',
-                component: () => import('@/views/dashboard/index'),
-                name: 'Dashboard',
-                meta: { title: 'Dashboard', icon: 'dashboard', affix: true },
-            },
-        ],
-    },
-    {
-        path: '/documentation',
-        component: Layout,
-        children: [
-            {
-                path: 'index',
-                component: () => import('@/views/documentation/index'),
-                name: 'Documentation',
-                meta: { title: 'Documentation', icon: 'documentation', affix: true },
-            },
-        ],
-    },
-    // {
-    //   path: '/guide',
-    //   component: Layout,
-    //   redirect: '/guide/index',
-    //   children: [
-    //     {
-    //       path: 'index',
-    //       component: () => import('@/views/guide/index'),
-    //       name: 'Guide',
-    //       meta: { title: 'Guide', icon: 'guide', noCache: true }
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: '/profile',
-    //   component: Layout,
-    //   redirect: '/profile/index',
-    //   hidden: true,
-    //   children: [
-    //     {
-    //       path: 'index',
-    //       component: () => import('@/views/profile/index'),
-    //       name: 'Profile',
-    //       meta: { title: 'Profile', icon: 'user', noCache: true }
-    //     }
-    //   ]
-    // }
+    children: [
+      {
+        path: 'users',
+        component: () => import('@/views/users/index'),
+        name: 'users',
+        meta: { title: '用户管理', icon: 'user', affix: true }
+      },
+      {
+        path: 'roles',
+        component: () => import('@/views/roles/index'),
+        name: 'roles',
+        meta: { title: '角色管理', icon: 'user', affix: true }
+      }
+    ]
+  }
 ]
 
 /**
@@ -389,18 +372,18 @@ export const constantRoutes = [
 export const asyncRoutes = [tableRouter]
 
 const createRouter = () =>
-    new Router({
-        // mode: 'history', // require service support
-        scrollBehavior: () => ({ y: 0 }),
-        routes: constantRoutes,
-    })
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  })
 
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-    const newRouter = createRouter()
-    router.matcher = newRouter.matcher // reset router
+  const newRouter = createRouter()
+  router.matcher = newRouter.matcher // reset router
 }
 
 export default router
