@@ -104,6 +104,27 @@ export const constantRoutes = [
         meta: { title: '角色管理', icon: 'user', affix: true }
       }
     ]
+  },
+  {
+    path: '/dictionaries',
+    component: Layout,
+    name: 'dictionaries',
+    meta: {
+      title: '字典管理',
+      icon: 'table'
+    },
+    children: [
+      {
+        path: '/default',
+        redirect: '/manager'
+      },
+      {
+        path: '/manager',
+        component: () => import('@/views/dictionaries/index'),
+        name: 'dictionaries',
+        meta: { title: '字典管理', icon: 'user', affix: true }
+      }
+    ]
   }
 ]
 
