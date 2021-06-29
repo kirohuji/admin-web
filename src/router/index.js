@@ -106,6 +106,33 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/information',
+    component: Layout,
+    name: 'information',
+    meta: {
+      title: '资讯中心',
+      icon: 'table'
+    },
+    children: [
+      {
+        path: '/default',
+        redirect: '/infomanage'
+      },
+      {
+        path: '/infomanage',
+        component: () => import('@/views/infomanage/index'),
+        name: 'infomanage',
+        meta: { title: '资讯管理', icon: 'user', affix: true }
+      },
+      {
+        path: '/prpgd_edu',
+        component: () => import('@/views/prpgd_edu/index'),
+        name: 'prpgd_edu',
+        meta: { title: '宣教管理', icon: 'user', affix: true }
+      }
+    ]
+  },
+  {
     path: '/dictionaries',
     component: Layout,
     name: 'dictionaries',
@@ -120,9 +147,15 @@ export const constantRoutes = [
       },
       {
         path: '/manager',
-        component: () => import('@/views/dictionaries/index'),
-        name: 'dictionaries',
+        component: () => import('@/views/dicmanage/index'),
+        name: 'dicmanage',
         meta: { title: '字典管理', icon: 'user', affix: true }
+      },
+      {
+        path: '/organmanage',
+        component: () => import('@/views/organmanage/index'),
+        name: 'organmanage',
+        meta: { title: '机构维护', icon: 'user', affix: true }
       }
     ]
   }
