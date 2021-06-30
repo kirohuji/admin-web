@@ -3,21 +3,29 @@
     <Card style="padding: 14px;padding-bottom: 0">
       <DataSearchForm :forms="config.search" label-position="right" style="justify-content: space-between;">
         <template v-slot:right>
-          <el-button>新建活动</el-button>
+          <el-button @click="$refs.formDialog.open()">新建用户</el-button>
         </template>
       </DataSearchForm>
     </Card>
     <Card style="padding: 14px;padding-top: 0">
       <DataTable v-bind="table" style="padding: 0">
-        <template v-slot:operation>
+        <template v-slot:operation="{ row }">
           <div>
-            <el-link type="primary" @click="$refs.baseDialog.open()">编辑</el-link>
+            <el-link
+              type="primary"
+              @click="
+                () => {
+                  table.selected = row
+                  $refs.formDialog.open()
+                }
+              "
+            >编辑</el-link>
             <el-link type="primary">禁用</el-link>
           </div>
         </template>
       </DataTable>
     </Card>
-    <BaseDialog ref="baseDialog" title="新增用户">
+    <BaseDialog ref="formDialog" title="新增用户">
       <DataForm :forms="config.form" label-position="right" />
     </BaseDialog>
   </div>
@@ -42,6 +50,7 @@ export default {
     return {
       config: config,
       table: {
+        selected: {},
         data: [
           {
             name: '王真',

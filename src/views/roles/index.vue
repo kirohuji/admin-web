@@ -3,7 +3,7 @@
     <Card style="padding: 14px;padding-bottom: 0">
       <DataSearchForm :forms="config.search" label-position="right" style="justify-content: space-between;">
         <template v-slot:right>
-          <el-button>新建活动</el-button>
+          <el-button>新建角色</el-button>
         </template>
       </DataSearchForm>
     </Card>
@@ -64,74 +64,15 @@ export default {
         column: [
           {
             prop: 'name',
-            label: '姓名',
-            width: '80'
+            label: '角色名称',
+            width: '300'
           },
           {
-            prop: 'sex',
-            label: '性别',
-            width: '60'
+            prop: 'description',
+            label: '角色描述'
           },
           {
-            prop: 'age',
-            label: '年龄',
-            width: '60'
-          },
-          {
-            prop: 'card',
-            label: '身份证号',
-            width: '150'
-          },
-          {
-            prop: 'type',
-            label: '居民类型',
-            width: '80'
-          },
-          {
-            prop: 'country',
-            label: '县/市',
-            width: '80'
-          },
-          {
-            prop: 'towns',
-            label: '乡/镇',
-            width: '80'
-          },
-          {
-            prop: 'address',
-            label: '家庭地址',
-            width: '160'
-          },
-          {
-            prop: 'source',
-            label: '预警来源',
-            width: '90'
-          },
-          {
-            prop: 'content',
-            label: '预警内容',
-            width: '160'
-          },
-          {
-            prop: 'chance',
-            label: '返贫概率',
-            width: '70'
-          },
-          {
-            prop: 'date',
-            label: '预警时间',
-            width: '160'
-          },
-          {
-            prop: 'audit',
-            label: '预警审核',
-            width: '100'
-          },
-          {
-            prop: 'audit_date',
-            label: '审核时间'
-          },
-          {
+            fixed: 'right',
             prop: 'operation',
             label: '操作',
             width: '150',
