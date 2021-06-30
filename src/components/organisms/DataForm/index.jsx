@@ -45,12 +45,16 @@ export default {
   watch: {
     data(val) {
       if (val) {
+        this.transform()
         this.initData(val)
       }
     }
   },
   created() {
     this.transform()
+    if (this.data) {
+      this.initData(this.data)
+    }
   },
   methods: {
     initData(data) {
@@ -60,6 +64,7 @@ export default {
       this.$emit('search', this.model)
     },
     transform() {
+      this.model = {}
       this.$set(
         this,
         'model',
@@ -68,9 +73,6 @@ export default {
           this.forms.fields.map((n) => _.defaultTo(n.default, ''))
         )
       )
-      if (this.data) {
-        this.initData(this.data)
-      }
     },
     has(rIndex, cIndex) {
       return cIndex + 1 > rIndex * this.forms.col && cIndex + 1 <= (rIndex + 1) * this.forms.col

@@ -3,7 +3,7 @@ export default {
     col: 3,
     fields: [
       {
-        label: '预警时间',
+        label: '用户管理',
         prop: 'date',
         component: 'date-picker',
         type: 'datetime',
@@ -18,7 +18,7 @@ export default {
         ]
       },
       {
-        label: '审核时间',
+        label: '所属机构',
         prop: 'aduit',
         component: 'date-picker',
         type: 'datetime',
