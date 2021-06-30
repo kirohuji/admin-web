@@ -26,7 +26,7 @@
       </DataTable>
     </Card>
     <BaseDialog ref="formDialog" title="新增用户">
-      <DataForm :forms="config.form" label-position="right" />
+      <DataForm :forms="config.form" label-position="right" :data="table.selected" />
     </BaseDialog>
   </div>
 </template>
@@ -54,19 +54,10 @@ export default {
         data: [
           {
             name: '王真',
-            sex: '男',
-            age: 43,
-            card: '330324199708025997',
-            type: '脱贫',
-            country: '普格县',
-            towns: '花山镇',
-            address: '补觉村015号',
-            source: '系统预警',
-            content: '年度医疗自费支出4540',
-            chance: '高',
-            date: '2021.01.21 10:211',
-            audit: '待审核',
-            audit_date: '-'
+            org: '测试',
+            roles: '测试',
+            card: '测试',
+            status: '测试'
           }
         ],
         column: [
@@ -76,68 +67,23 @@ export default {
             width: '80'
           },
           {
-            prop: 'sex',
-            label: '性别',
-            width: '60'
-          },
-          {
-            prop: 'age',
-            label: '年龄',
-            width: '60'
-          },
-          {
-            prop: 'card',
-            label: '身份证号',
+            prop: 'org',
+            label: '所属机构',
             width: '150'
           },
           {
-            prop: 'type',
-            label: '居民类型',
-            width: '80'
-          },
-          {
-            prop: 'country',
-            label: '县/市',
-            width: '80'
-          },
-          {
-            prop: 'towns',
-            label: '乡/镇',
-            width: '80'
-          },
-          {
-            prop: 'address',
-            label: '家庭地址',
-            width: '160'
-          },
-          {
-            prop: 'source',
-            label: '预警来源',
-            width: '90'
-          },
-          {
-            prop: 'content',
-            label: '预警内容',
-            width: '160'
-          },
-          {
-            prop: 'chance',
-            label: '返贫概率',
-            width: '70'
-          },
-          {
-            prop: 'date',
-            label: '预警时间',
-            width: '160'
-          },
-          {
-            prop: 'audit',
-            label: '预警审核',
+            prop: 'roles',
+            label: '所属角色',
             width: '100'
           },
           {
-            prop: 'audit_date',
-            label: '审核时间'
+            prop: 'remark',
+            label: '备注'
+          },
+          {
+            prop: 'status',
+            label: '状态',
+            width: '80'
           },
           {
             prop: 'operation',

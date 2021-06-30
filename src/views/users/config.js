@@ -34,7 +34,7 @@ export default {
     fields: [
       {
         label: '所属单位',
-        prop: 'date',
+        prop: 'org',
         component: 'input',
         type: 'input',
         placeholder: '卫健局',
@@ -43,7 +43,7 @@ export default {
       },
       {
         label: '姓名',
-        prop: 'date',
+        prop: 'name',
         component: 'input',
         type: 'input',
         placeholder: '请输入内容',
@@ -52,7 +52,7 @@ export default {
       },
       {
         label: '手机号',
-        prop: 'date',
+        prop: 'phone',
         component: 'input',
         type: 'input',
         placeholder: '请输入内容',
@@ -61,7 +61,7 @@ export default {
       },
       {
         label: '钉钉账号',
-        prop: 'date',
+        prop: 'dingding',
         component: 'input',
         type: 'input',
         placeholder: '请输入内容',
@@ -70,7 +70,7 @@ export default {
       },
       {
         label: '所属角色',
-        prop: 'date',
+        prop: 'roles',
         component: 'radio-border-group',
         size: 'small',
         style: 'width: 598px',
@@ -97,7 +97,7 @@ export default {
       },
       {
         label: '备注',
-        prop: 'date',
+        prop: 'remark',
         component: 'input',
         type: 'textarea',
         placeholder: '请输入内容',

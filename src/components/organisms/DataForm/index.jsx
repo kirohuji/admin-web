@@ -25,7 +25,7 @@ export default {
   /**
      * 表单的加载事件
      */
-  props: ['forms', 'buttons'],
+  props: ['forms', 'buttons', 'data'],
   component: {
     BaseEnter
   },
@@ -42,10 +42,20 @@ export default {
       return Math.round(24 / this.forms.col)
     }
   },
+  watch: {
+    data(val) {
+      if (val) {
+        this.initData(val)
+      }
+    }
+  },
   created() {
     this.transform()
   },
   methods: {
+    initData(data) {
+      this.model = Object.assign(this.model, data)
+    },
     search() {
       this.$emit('search', this.model)
     },
@@ -58,6 +68,9 @@ export default {
           this.forms.fields.map((n) => _.defaultTo(n.default, ''))
         )
       )
+      if (this.data) {
+        this.initData(this.data)
+      }
     },
     has(rIndex, cIndex) {
       return cIndex + 1 > rIndex * this.forms.col && cIndex + 1 <= (rIndex + 1) * this.forms.col
