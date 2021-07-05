@@ -4,6 +4,22 @@
     <template v-if="$attrs.component === 'input'">
       <el-input v-model="model[$attrs.prop]" v-bind="$attrs" />
     </template>
+    <!-- 上传器 -->
+    <template v-if="$attrs.component === 'image'">
+      <BaseImageUpload />
+    </template>
+    <!-- 导入器 -->
+    <template v-else-if="$attrs.component === 'import'">
+      <BaseImport v-model="model[$attrs.prop]" v-bind="$attrs" />
+    </template>
+    <!-- 搜索器 -->
+    <template v-else-if="$attrs.component === 'search'">
+      <BaseSearch v-model="model[$attrs.prop]" v-bind="$attrs" />
+    </template>
+    <!-- 文本 -->
+    <template v-else-if="$attrs.component === 'label'">
+      <span v-bind="$attrs">{{ model[$attrs.prop] }}</span>
+    </template>
     <!-- 日期选择器-->
     <template v-else-if="$attrs.component === 'date-picker'">
       <el-date-picker v-model="model[$attrs.prop]" v-bind="$attrs" />
@@ -18,7 +34,7 @@
         <el-option v-for="item in $attrs.options" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
     </template>
-    <!-- 一般选择器-->
+    <!-- 有边框的单选器-->
     <template v-else-if="$attrs.component === 'radio-border-group'">
       <el-radio-group v-model="model[$attrs.prop]" v-bind="$attrs" class="radio-border-group">
         <el-radio v-for="item in $attrs.options" :key="item.value" :label="item.value || item.label">
@@ -26,16 +42,29 @@
         </el-radio>
       </el-radio-group>
     </template>
-    <div v-if="$attrs.import" style="margin-left: 8px">
-      <el-button type="primary">导入</el-button>
-    </div>
+    <!-- 单选器-->
+    <template v-else-if="$attrs.component === 'radio-group'">
+      <el-radio-group v-model="model[$attrs.prop]" v-bind="$attrs">
+        <el-radio v-for="item in $attrs.options" :key="item.value" :label="item.value || item.label">
+          {{ item.label }}
+        </el-radio>
+      </el-radio-group>
+    </template>
   </div>
 </template>
 
 <script>
 import { regionData } from 'element-china-area-data'
+import BaseImport from '../BaseImport'
+import BaseSearch from '../BaseSearch'
+import BaseImageUpload from '../BaseImageUpload'
 export default {
   name: 'BaseEnter',
+  components: {
+    BaseImport,
+    BaseSearch,
+    BaseImageUpload
+  },
   // eslint-disable-next-line vue/require-prop-types
   props: ['model'],
   data() {

@@ -104,38 +104,6 @@ export default {
         style: 'width: 400px',
         size: 'small',
         required: true
-      },
-      {
-        label: '用户成员',
-        prop: 'group',
-        component: 'select',
-        import: true,
-        multiple: true,
-        'collapse-tags': true,
-        placeholder: '请选择',
-        // style: 'width: 400px',
-        size: 'small',
-        required: true,
-        options: [
-          {
-            value: 1,
-            label: '卫健信息科长'
-          },
-          {
-            value: 2,
-            label: '疾控科科长'
-          }
-        ]
-      },
-      {
-        label: '审核时间',
-        prop: 'aduit',
-        component: 'date-picker',
-        type: 'datetime',
-        placeholder: '选择日期',
-        'value-format': 'yyyy-MM-dd HH:mm',
-        format: 'yyyy-MM-dd HH:mm',
-        size: 'small'
       }
     ]
   }

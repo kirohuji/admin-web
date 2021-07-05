@@ -129,6 +129,12 @@ export const constantRoutes = [
         component: () => import('@/views/prpgd_edu/index'),
         name: 'prpgd_edu',
         meta: { title: '宣教管理', icon: 'user', affix: true }
+      },
+      {
+        path: '/prpgd_edu_create',
+        component: () => import('@/views/prpgd_edu/create'),
+        name: 'prpgd_edu_create',
+        meta: { title: '新建宣教', icon: 'user', affix: true }
       }
     ]
   },

@@ -36,10 +36,10 @@ export default {
   },
   computed: {
     row() {
-      return Math.round(this.forms.fields.length / this.forms.col)
+      return this.forms.col > 0 ? Math.round(this.forms.fields.length / this.forms.col) : 0
     },
     span() {
-      return Math.round(24 / this.forms.col)
+      return this.forms.col > 0 ? Math.round(24 / this.forms.col) : 0
     }
   },
   created() {
@@ -67,18 +67,20 @@ export default {
     return (
       <ElForm inline class='data-search-form'>
         <div>
-          {Array.apply(null, { length: this.row }).map((r, rIndex) => (
-            <ElRow>
-              {this.forms.fields.map(
-                (item, index) =>
-                  this.has(rIndex, index) && (
-                    <ElCol span={this.span}>
-                      <FormItem item={item} value={this.model} />
-                    </ElCol>
-                  )
-              )}
-            </ElRow>
-          ))}
+          {this.forms.col === 0
+            ? this.forms.fields.map((item) => <FormItem item={item} value={this.model} />)
+            : Array.apply(null, { length: this.row }).map((r, rIndex) => (
+              <ElRow>
+                {this.forms.fields.map(
+                  (item, index) =>
+                    this.has(rIndex, index) && (
+                      <ElCol span={this.span}>
+                        <FormItem item={item} value={this.model} />
+                      </ElCol>
+                    )
+                )}
+              </ElRow>
+            ))}
         </div>
         {this.$scopedSlots.right ? (
           <div class='buttons'>{this.$scopedSlots.right()}</div>

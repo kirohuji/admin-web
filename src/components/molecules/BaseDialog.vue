@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="visible" :before-close="close" v-bind="$attrs" custom-class="base-dialog">
+  <el-dialog :visible.sync="visible" :before-close="close" v-bind="$attrs" custom-class="base-dialog" append-to-body>
     <slot />
     <template v-slot:title>
       <div style="position: relative;">

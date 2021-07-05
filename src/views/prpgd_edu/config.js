@@ -1,9 +1,9 @@
 export default {
   search: {
-    col: 3,
+    col: 0,
     fields: [
       {
-        label: '预警时间',
+        label: '资讯分类',
         prop: 'date',
         component: 'date-picker',
         type: 'datetime',
@@ -18,7 +18,7 @@ export default {
         ]
       },
       {
-        label: '审核时间',
+        label: '状态',
         prop: 'aduit',
         component: 'date-picker',
         type: 'datetime',
@@ -26,6 +26,19 @@ export default {
         'value-format': 'yyyy-MM-dd HH:mm',
         format: 'yyyy-MM-dd HH:mm',
         size: 'small'
+      },
+      {
+        label: '日期',
+        prop: 'aduit',
+        component: 'date-picker',
+        type: 'daterange',
+        placeholder: '选择日期',
+        'value-format': 'yyyy-MM-dd HH:mm',
+        format: 'yyyy-MM-dd HH:mm',
+        size: 'small',
+        'range-separator': '至',
+        'start-placeholder': '开始日期',
+        'end-placeholder': '结束日期'
       }
     ]
   },
@@ -33,17 +46,57 @@ export default {
     col: 1,
     fields: [
       {
-        label: '所属单位',
+        label: '发布账号',
+        prop: 'title',
+        component: 'label',
+        required: true
+      },
+      {
+        label: '分类',
         prop: 'date',
+        component: 'radio-group',
+        layout: 'center',
+        options: [
+          {
+            label: '饮食宣教'
+          },
+          {
+            label: '护理常识'
+          },
+          {
+            label: '康复宣教'
+          },
+          {
+            label: '安全宣教'
+          },
+          {
+            label: '疾病宣教'
+          },
+          {
+            label: '药物知识'
+          }
+        ],
+        required: true
+      },
+      {
+        label: '标题',
+        prop: 'phone',
         component: 'input',
-        type: 'input',
-        placeholder: '卫健局',
+        placeholder: '请输入内容数字限制30字内',
+        size: 'small',
+        required: true
+      },
+      {
+        label: '封面',
+        prop: 'dingding',
+        component: 'image',
+        placeholder: '请输入内容',
         size: 'small',
         required: true
       },
       {
         label: '所属角色',
-        prop: 'date',
+        prop: 'roles',
         component: 'radio-border-group',
         size: 'small',
         style: 'width: 598px',
@@ -66,50 +119,17 @@ export default {
           {
             label: '基位科长1'
           }
-        ],
-        required: true
+        ]
       },
       {
         label: '备注',
-        prop: 'date',
+        prop: 'remark',
         component: 'input',
         type: 'textarea',
         placeholder: '请输入内容',
         style: 'width: 400px',
         size: 'small',
         required: true
-      },
-      {
-        label: '用户成员',
-        prop: 'group',
-        component: 'select',
-        import: true,
-        multiple: true,
-        'collapse-tags': true,
-        placeholder: '请选择',
-        // style: 'width: 400px',
-        size: 'small',
-        required: true,
-        options: [
-          {
-            value: 1,
-            label: '卫健信息科长'
-          },
-          {
-            value: 2,
-            label: '疾控科科长'
-          }
-        ]
-      },
-      {
-        label: '审核时间',
-        prop: 'aduit',
-        component: 'date-picker',
-        type: 'datetime',
-        placeholder: '选择日期',
-        'value-format': 'yyyy-MM-dd HH:mm',
-        format: 'yyyy-MM-dd HH:mm',
-        size: 'small'
       }
     ]
   }

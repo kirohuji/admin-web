@@ -97,7 +97,14 @@ export default {
                 (item, index) =>
                   this.has(rIndex, index) && (
                     <ElCol span={this.span}>
-                      <FormItem item={item} value={this.model} />
+                      <FormItem
+                        item={item}
+                        value={this.model}
+                        style={{
+                          display: item.layout ? 'flex' : 'inline-block',
+                          alignItems: item.layout
+                        }}
+                      />
                     </ElCol>
                   )
               )}

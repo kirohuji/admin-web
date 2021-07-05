@@ -7,10 +7,12 @@
         width: 150px;
     }
 
-    .el-date-editor.el-input {
+    .el-date-editor {
         width: 150px;
     }
-
+    .el-range-editor.el-date-editor {
+        width: auto !important;
+    }
     .el-form-item {
         margin-right: 20px;
     }

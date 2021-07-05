@@ -1,10 +1,19 @@
 const module = 'c_admin/organization'
 export class Node {
-    node_id = ''
-    p_node_id = ''
-    name = ''
-    is_checked = ''
-    children = []
+  constructor(node_id, p_node_id, name, is_checked, children) {
+    this.node_id = node_id
+    this.p_node_id = p_node_id
+    this.name = name
+    this.is_checked = is_checked
+    this.children = children || []
+  }
+}
+export class NodeMenu {
+  constructor(o_id, name, type) {
+    this.o_id = o_id
+    this.name = name
+    this.type = type
+  }
 }
 export class OrganmanageService {
   constructor({ api }) {

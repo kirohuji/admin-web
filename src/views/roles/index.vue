@@ -3,7 +3,7 @@
     <Card style="padding: 14px;padding-bottom: 0">
       <DataSearchForm :forms="config.search" label-position="right" style="justify-content: space-between;">
         <template v-slot:right>
-          <el-button>新建角色</el-button>
+          <el-button @click="$refs.formDialog.open()">新建角色</el-button>
         </template>
       </DataSearchForm>
     </Card>
@@ -11,15 +11,33 @@
       <DataTable v-bind="table" style="padding: 0">
         <template v-slot:operation>
           <div>
-            <el-link type="primary" @click="$refs.baseDialog.open()">授权</el-link>
-            <el-link type="primary">编辑</el-link>
+            <el-link type="primary" @click="$refs.authorizeDialog.open()">授权</el-link>
+            <el-link
+              type="primary"
+              @click="
+                () => {
+                  table.selected = row
+                  $refs.formDialog.open()
+                }
+              "
+            >编辑</el-link>
             <el-link type="primary">删除</el-link>
           </div>
         </template>
       </DataTable>
     </Card>
-    <BaseDialog ref="baseDialog" title="新增用户">
+    <BaseDialog ref="formDialog" title="新增用户">
       <DataForm :forms="config.form" label-position="right" />
+    </BaseDialog>
+    <BaseDialog ref="authorizeDialog" title="角色授权" width="200">
+      <AuthorizeLayout left="用户搜索" right="居民权限">
+        <template v-slot:left>
+          <DataTree />
+        </template>
+        <template v-slot:right>
+          <DataTree />
+        </template>
+      </AuthorizeLayout>
     </BaseDialog>
   </div>
 </template>
@@ -31,18 +49,40 @@ import DataForm from '@/components/organisms/DataForm'
 import BaseDialog from '@/components/molecules/BaseDialog.vue'
 import Card from '@/components/atoms/Card'
 import config from './config'
+import DataTree from '@/components/organisms/DataTree'
+const AuthorizeLayout = ({ props: { left, right }, scopedSlots }) => (
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'space-evenly'
+    }}
+  >
+    <div style='display: flex;align-items: baseline;'>
+      <span>{left}</span>
+      {scopedSlots.left && scopedSlots.left()}
+    </div>
+    <ElDivider direction='vertical' />
+    <div style='display: flex;align-items: baseline;'>
+      <span>{right}</span>
+      {scopedSlots.right && scopedSlots.right()}
+    </div>
+  </div>
+)
 export default {
   components: {
     Card,
     DataTable,
     DataSearchForm,
     DataForm,
-    BaseDialog
+    AuthorizeLayout,
+    BaseDialog,
+    DataTree
   },
   data() {
     return {
       config: config,
       table: {
+        selected: {},
         data: [
           {
             name: '王真',
