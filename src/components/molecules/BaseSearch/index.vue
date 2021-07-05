@@ -1,15 +1,11 @@
 <template>
   <el-input v-bind="$attrs">
-    <el-button slot="append" icon="el-icon-search" />
+    <el-button slot="append" type="primary">搜索</el-button>
   </el-input>
 </template>
 
 <script>
-export default {
-  data() {
-    return {}
-  }
-}
+export default {}
 </script>
 
 <style></style>

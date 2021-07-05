@@ -8,6 +8,9 @@
     <template v-if="$attrs.component === 'image'">
       <BaseImageUpload />
     </template>
+    <template v-if="$attrs.component === 'edit'">
+      <BaseEditor v-model="model[$attrs.prop]" />
+    </template>
     <!-- 导入器 -->
     <template v-else-if="$attrs.component === 'import'">
       <BaseImport v-model="model[$attrs.prop]" v-bind="$attrs" />
@@ -58,11 +61,13 @@ import { regionData } from 'element-china-area-data'
 import BaseImport from '../BaseImport'
 import BaseSearch from '../BaseSearch'
 import BaseImageUpload from '../BaseImageUpload'
+import BaseEditor from '../BaseEditor'
 export default {
   name: 'BaseEnter',
   components: {
     BaseImport,
     BaseSearch,
+    BaseEditor,
     BaseImageUpload
   },
   // eslint-disable-next-line vue/require-prop-types

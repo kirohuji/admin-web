@@ -82,6 +82,40 @@ export const constantRoutes = [
   //   ]
   // },
   {
+    path: '/information',
+    component: Layout,
+    name: 'information',
+    meta: {
+      title: '资讯中心',
+      icon: 'table'
+    },
+    children: [
+      {
+        path: 'default',
+        redirect: 'infomanage'
+      },
+      {
+        path: 'infomanage',
+        component: () => import('@/views/infomanage/index'),
+        name: 'infomanage',
+        meta: { title: '资讯管理', icon: 'user', affix: true }
+      },
+      {
+        path: 'infomanage/edit/:id(\\d+)',
+        component: () => import('@/views/infomanage/form'),
+        name: 'infomanage_create',
+        meta: { title: '新建资讯', noCache: true, activeMenu: '/information/default' },
+        hidden: true
+      },
+      {
+        path: 'prpgd_edu',
+        component: () => import('@/views/prpgd_edu/index'),
+        name: 'prpgd_edu',
+        meta: { title: '宣教管理', icon: 'user', affix: true }
+      }
+    ]
+  },
+  {
     path: '/',
     component: Layout,
     redirect: '/users',
@@ -106,35 +140,19 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/information',
+    path: '/organmanage',
     component: Layout,
-    name: 'information',
+    name: 'dictionaries',
     meta: {
-      title: '资讯中心',
+      title: '机构维护',
       icon: 'table'
     },
     children: [
       {
-        path: '/default',
-        redirect: '/infomanage'
-      },
-      {
-        path: '/infomanage',
-        component: () => import('@/views/infomanage/index'),
-        name: 'infomanage',
-        meta: { title: '资讯管理', icon: 'user', affix: true }
-      },
-      {
-        path: '/prpgd_edu',
-        component: () => import('@/views/prpgd_edu/index'),
-        name: 'prpgd_edu',
-        meta: { title: '宣教管理', icon: 'user', affix: true }
-      },
-      {
-        path: '/prpgd_edu_create',
-        component: () => import('@/views/prpgd_edu/create'),
-        name: 'prpgd_edu_create',
-        meta: { title: '新建宣教', icon: 'user', affix: true }
+        path: '/organmanage',
+        component: () => import('@/views/organmanage/index'),
+        name: 'organmanage',
+        meta: { title: '机构维护', icon: 'user', affix: true }
       }
     ]
   },
@@ -148,20 +166,10 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: '/default',
-        redirect: '/manager'
-      },
-      {
-        path: '/manager',
+        path: '/dictionaries',
         component: () => import('@/views/dicmanage/index'),
         name: 'dicmanage',
         meta: { title: '字典管理', icon: 'user', affix: true }
-      },
-      {
-        path: '/organmanage',
-        component: () => import('@/views/organmanage/index'),
-        name: 'organmanage',
-        meta: { title: '机构维护', icon: 'user', affix: true }
       }
     ]
   }

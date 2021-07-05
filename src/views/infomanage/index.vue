@@ -1,55 +1,143 @@
 <template>
-  <Card class="main-layout">
-    <Card class="left" style="flex-grow: 1;">
-      <div class="card-header">
-        <el-button>新建字典分类</el-button>
-      </div>
-      <div class="card-body">
-        <div class="card-item">资讯类型</div>
-        <div class="card-item"> 活动类型</div>
-      </div>
+  <div>
+    <Card style="padding: 14px;padding-bottom: 0">
+      <DataSearchForm :forms="config.search" label-position="right" style="justify-content: space-between;" mode="search">
+        <template v-slot:right>
+          <el-button type="primary" @click="$router.push(`/information/infomanage/edit/${0}`)">新建资讯</el-button>
+        </template>
+      </DataSearchForm>
     </Card>
-    <div style="flex-grow: 8;">
-      <Card class="right" style="height: 100%;">
-        <DataTree />
-      </Card>
-      <div style="display: flex;justify-content: center;">
-        <el-button>取消</el-button>
-        <el-button type="primary">保存</el-button>
-      </div>
-    </div>
-  </Card>
+    <Card style="padding: 14px;padding-top: 0">
+      <DataTable v-bind="table" style="padding: 0">
+        <template v-slot:operation="{ row }">
+          <div style="display: flex;justify-content: space-between;">
+            <router-link :to="`/information/infomanage/edit/${row.id}`">
+              <el-link type="primary">编辑</el-link>
+            </router-link>
+            <el-link type="primary">下架</el-link>
+            <el-link type="primary">复制</el-link>
+            <el-link type="primary">删除</el-link>
+          </div>
+        </template>
+      </DataTable>
+    </Card>
+    <BaseDialog ref="formDialog" title="新建宣教">
+      <DataForm :forms="config.form" label-position="right" :data="table.selected" />
+    </BaseDialog>
+  </div>
 </template>
 
 <script>
+import DataTable from '@/components/organisms/DataTable'
+import DataSearchForm from '@/components/organisms/DataSearchForm'
+import DataForm from '@/components/organisms/DataForm'
+import BaseDialog from '@/components/molecules/BaseDialog.vue'
 import Card from '@/components/atoms/Card'
-import DataTree from '@/components/organisms/DataTree'
+import config from './config'
+
 export default {
   components: {
     Card,
-    DataTree
+    DataTable,
+    DataSearchForm,
+    DataForm,
+    BaseDialog
+  },
+  data() {
+    return {
+      config: config,
+      table: {
+        selected: {},
+        data: [
+          {
+            id: 1,
+            name: '王真',
+            org: '测试',
+            roles: '测试',
+            card: '测试',
+            status: '测试'
+          }
+        ],
+        column: [
+          {
+            prop: 'id',
+            label: '编号',
+            width: '100'
+          },
+          {
+            prop: 'org',
+            label: '分类',
+            width: '200'
+          },
+          {
+            prop: 'roles',
+            label: '标题名称'
+          },
+          {
+            prop: 'remark',
+            label: '状态',
+            width: '100'
+          },
+          {
+            prop: 'status',
+            label: '目标对象',
+            width: '120'
+          },
+          {
+            prop: 'status',
+            label: '已读人数/目标人数',
+            width: '200'
+          },
+          {
+            prop: 'status',
+            label: '阅读率',
+            width: '120'
+          },
+          {
+            prop: 'status',
+            label: '更新时间',
+            width: '120'
+          },
+          {
+            prop: 'status',
+            label: '操作人',
+            width: '120'
+          },
+          {
+            prop: 'operation',
+            label: '操作',
+            width: '200',
+            scopedSlots: true
+          }
+        ]
+      }
+    }
+  },
+  methods: {
+    handleSearch(model) {
+      console.log(model)
+    },
+    onSubmit() {
+      console.log('submit!')
+    }
   }
 }
 </script>
-<style scoped lang="scss">
-.main-layout {
-    padding: 1px 0px 0px;
-    display: flex;
-}
-.left,
-.right {
-    border: 1px solid #ebedf0;
-    margin: 14px 12px;
-}
-.card-header {
-    text-align: center;
-    padding: 19px;
-    color: #1684dd;
-    font-size: 16px;
-}
-.card-item {
-    padding: 15px 22px;
-    color: #333333;
-    font-size: 18px;
+
+<style lang="scss" scoped>
+::v-deep .color-header {
+    th {
+        padding: 0 0;
+        background-color: rgba(229, 229, 229, 1);
+
+        .cell {
+            color: #333;
+        }
+    }
+
+    td {
+        border: 1px solid rgba(198, 198, 198, 1);
+    }
+    // border: 1px solid rgba(229, 229, 229, 1);
 }
 </style>

@@ -19,16 +19,22 @@
               justify-content: center;
               align-items: center;"
           >
-            <span>当前位置:</span><breadcrumb
-              id="breadcrumb-container"
-              class="breadcrumb-container"
-            /></div>
-          <el-tabs v-model="activeName" class="app-main-tabs" @tab-click="handleClick">
-            <el-tab-pane label="政府" name="first" />
-            <el-tab-pane label="医疗" name="second" />
-            <el-tab-pane label="居民" name="third" />
-            <el-tab-pane label="系统" name="fourth" />
-          </el-tabs>
+            <span>当前位置:</span><breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;"
+          >
+            <div style="margin: 0 20px;">选择视角</div>
+            <el-tabs v-model="activeName" class="app-main-tabs" @tab-click="handleClick">
+              <el-tab-pane label="政府" name="first" />
+              <el-tab-pane label="医疗" name="second" />
+              <el-tab-pane label="居民" name="third" />
+              <el-tab-pane label="系统" name="fourth" />
+            </el-tabs>
+          </div>
         </card>
       </app-main>
       <right-panel v-if="showSettings">
@@ -107,10 +113,10 @@ export default {
     }
 }
 ::v-deep .app-main-tabs {
-  .el-tabs__header {
-    // padding: 4px;
-    margin: 0;
-  }
+    .el-tabs__header {
+        // padding: 4px;
+        margin: 0;
+    }
 }
 
 .drawer-bg {

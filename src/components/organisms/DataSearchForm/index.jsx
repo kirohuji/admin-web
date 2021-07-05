@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import BaseEnter from '@/components/molecules/BaseEnter'
+import BaseSearchButton from '@/components/molecules/BaseSearchButton'
 import './style.scss'
 const FormItem = {
   name: 'FormItem',
@@ -25,9 +26,10 @@ export default {
   /**
      * 表单的加载事件
      */
-  props: ['forms', 'buttons'],
+  props: ['forms', 'buttons', 'mode'],
   component: {
-    BaseEnter
+    BaseEnter,
+    BaseSearchButton
   },
   data() {
     return {
@@ -66,7 +68,9 @@ export default {
   render(h) {
     return (
       <ElForm inline class='data-search-form'>
-        <div>
+        <div style='display: flex'>
+          {this.$scopedSlots.left && this.$scopedSlots.left()}
+          {/* {this.mode === 'search' && <BaseSearchButton />} */}
           {this.forms.col === 0
             ? this.forms.fields.map((item) => <FormItem item={item} value={this.model} />)
             : Array.apply(null, { length: this.row }).map((r, rIndex) => (

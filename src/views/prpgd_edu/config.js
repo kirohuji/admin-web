@@ -95,31 +95,9 @@ export default {
         required: true
       },
       {
-        label: '所属角色',
+        label: '编辑',
         prop: 'roles',
-        component: 'radio-border-group',
-        size: 'small',
-        style: 'width: 598px',
-        options: [
-          {
-            label: '卫健信息科长'
-          },
-          {
-            label: '疾控科科长'
-          },
-          {
-            label: '卫健局局长'
-          },
-          {
-            label: '基位科长'
-          },
-          {
-            label: '卫健局局长'
-          },
-          {
-            label: '基位科长1'
-          }
-        ]
+        component: 'edit'
       },
       {
         label: '备注',
