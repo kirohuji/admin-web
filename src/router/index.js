@@ -7,7 +7,7 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import tableRouter from './modules/table'
+// import tableRouter from './modules/table'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -112,19 +112,28 @@ export const constantRoutes = [
         component: () => import('@/views/prpgd_edu/index'),
         name: 'prpgd_edu',
         meta: { title: '宣教管理', icon: 'user', affix: true }
+      },
+      {
+        path: 'active',
+        component: () => import('@/views/active/index'),
+        name: 'active',
+        meta: { title: '活动管理', icon: 'user', affix: true }
       }
     ]
   },
   {
-    path: '/',
+    path: '/person',
     component: Layout,
-    redirect: '/users',
-    name: 'users',
+    name: 'person',
     meta: {
       title: '用户中心',
       icon: 'table'
     },
     children: [
+      {
+        path: 'default',
+        redirect: 'users'
+      },
       {
         path: 'users',
         component: () => import('@/views/users/index'),
@@ -437,7 +446,7 @@ export const constantRoutes = [
 //   // 404 page must be placed at the end !!!
 //   { path: '*', redirect: '/404', hidden: true }
 // ]
-export const asyncRoutes = [tableRouter]
+export const asyncRoutes = []
 
 const createRouter = () =>
   new Router({

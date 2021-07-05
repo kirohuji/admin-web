@@ -3,14 +3,14 @@ export default {
     col: 0,
     fields: [
       {
-        label: '宣教搜索',
+        label: '活动搜索',
         prop: 'title',
         component: 'search',
         placeholder: '根据标题名称、编号搜索',
         size: 'small'
       },
       {
-        label: '宣教分类',
+        label: '活动分类',
         prop: 'type',
         component: 'select',
         options: [
@@ -137,14 +137,10 @@ export default {
         component: 'edit'
       },
       {
-        label: '备注',
+        label: '对象',
         prop: 'remark',
-        component: 'input',
-        type: 'textarea',
-        placeholder: '请输入内容',
-        style: 'width: 400px',
-        size: 'small',
-        required: true
+        component: 'tag-select',
+        size: 'small'
       }
     ]
   }

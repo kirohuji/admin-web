@@ -8,6 +8,10 @@
     <template v-if="$attrs.component === 'image'">
       <BaseImageUpload />
     </template>
+    <!-- 上传器 -->
+    <template v-if="$attrs.component === 'tag-select'">
+      <BaseTagSelect />
+    </template>
     <template v-if="$attrs.component === 'edit'">
       <BaseEditor v-model="model[$attrs.prop]" />
     </template>
@@ -59,6 +63,7 @@
 <script>
 import { regionData } from 'element-china-area-data'
 import BaseImport from '../BaseImport'
+import BaseTagSelect from '../BaseTagSelect'
 import BaseSearch from '../BaseSearch'
 import BaseImageUpload from '../BaseImageUpload'
 import BaseEditor from '../BaseEditor'
@@ -68,6 +73,7 @@ export default {
     BaseImport,
     BaseSearch,
     BaseEditor,
+    BaseTagSelect,
     BaseImageUpload
   },
   // eslint-disable-next-line vue/require-prop-types

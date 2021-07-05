@@ -137,14 +137,10 @@ export default {
         component: 'edit'
       },
       {
-        label: '备注',
+        label: '对象',
         prop: 'remark',
-        component: 'input',
-        type: 'textarea',
-        placeholder: '请输入内容',
-        style: 'width: 400px',
-        size: 'small',
-        required: true
+        component: 'tag-select',
+        size: 'small'
       }
     ]
   }
