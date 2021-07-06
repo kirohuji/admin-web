@@ -1,7 +1,7 @@
 import Card from '@/components/atoms/Card'
 import { h } from 'vue'
 import _ from 'lodash'
-import './MenusCard.scss'
+import './index.scss'
 /**
  * descriptions: '字典的菜单'
  * props:

@@ -1,10 +1,21 @@
 import _ from 'lodash'
 import BaseEnter from '@/components/molecules/BaseEnter'
 import BaseSearchButton from '@/components/molecules/BaseSearchButton'
+import Thenable from '@/components/atoms/Thenable'
 import './style.scss'
 const FormItem = {
   name: 'FormItem',
-  props: ['item', 'value'],
+  props: ['item', 'value', 'zValue','context'],
+  watch: {
+    zValue: {
+      handler() {
+        if (this.item.isReal) {
+          this.$emit('search')
+        }
+      },
+      deep: true
+    }
+  },
   render() {
     return (
       <ElFormItem
@@ -12,12 +23,38 @@ const FormItem = {
           props: this.item
         }}
       >
-        <BaseEnter
-          {...{
-            props: { model: this.value },
-            attrs: this.item
-          }}
-        />
+        {this.item.async ? (
+          <Thenable
+            {...{
+              props: {
+                vm: this.context,
+                ...this.item.options.call(this.vm)
+              },
+              scopedSlots: {
+                default: ({ result: { data }}) => (
+                  <BaseEnter
+                    {...{
+                      props: { model: this.value },
+                      attrs: {
+                        ...this.item,
+                        options: data
+                      },
+                      on: this.$listeners
+                    }}
+                  />
+                )
+              }
+            }}
+          ></Thenable>
+        ) : (
+          <BaseEnter
+            {...{
+              props: { model: this.value },
+              attrs: this.item,
+              on: this.$listeners
+            }}
+          />
+        )}
       </ElFormItem>
     )
   }
@@ -72,14 +109,32 @@ export default {
           {this.$scopedSlots.left && this.$scopedSlots.left()}
           {/* {this.mode === 'search' && <BaseSearchButton />} */}
           {this.forms.col === 0
-            ? this.forms.fields.map((item) => <FormItem item={item} value={this.model} />)
+            ? this.forms.fields.map((item) => (
+              <FormItem
+                item={item}
+                value={this.model}
+                zValue={this.model[item.prop]}
+                context={this.context}
+                {...{
+                  on: this.$listeners
+                }}
+              />
+            ))
             : Array.apply(null, { length: this.row }).map((r, rIndex) => (
               <ElRow>
                 {this.forms.fields.map(
                   (item, index) =>
                     this.has(rIndex, index) && (
                       <ElCol span={this.span}>
-                        <FormItem item={item} value={this.model} />
+                        <FormItem
+                          item={item}
+                          value={this.model}
+                          zValue={this.model[item.prop]}
+                          context={this.context}
+                          {...{
+                            on: this.$listeners
+                          }}
+                        />
                       </ElCol>
                     )
                 )}

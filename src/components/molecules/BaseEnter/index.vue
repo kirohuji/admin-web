@@ -15,13 +15,16 @@
     <template v-if="$attrs.component === 'edit'">
       <BaseEditor v-model="model[$attrs.prop]" />
     </template>
+    <template v-if="$attrs.component === 'cascader'">
+      <el-cascader v-model="model[$attrs.prop]" v-bind="$attrs" v-on="$listeners" />
+    </template>
     <!-- 导入器 -->
     <template v-else-if="$attrs.component === 'import'">
       <BaseImport v-model="model[$attrs.prop]" v-bind="$attrs" />
     </template>
     <!-- 搜索器 -->
     <template v-else-if="$attrs.component === 'search'">
-      <BaseSearch v-model="model[$attrs.prop]" v-bind="$attrs" />
+      <BaseSearch v-model="model[$attrs.prop]" v-bind="$attrs" v-on="$listeners" />
     </template>
     <!-- 文本 -->
     <template v-else-if="$attrs.component === 'label'">

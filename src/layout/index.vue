@@ -21,20 +21,7 @@
           >
             <span>当前位置:</span><breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
           </div>
-          <div
-            style="
-              display: flex;
-              justify-content: center;
-              align-items: center;"
-          >
-            <div style="margin: 0 20px;">选择视角</div>
-            <el-tabs v-model="activeName" class="app-main-tabs" @tab-click="handleClick">
-              <el-tab-pane label="政府" name="first" />
-              <el-tab-pane label="医疗" name="second" />
-              <el-tab-pane label="居民" name="third" />
-              <el-tab-pane label="系统" name="fourth" />
-            </el-tabs>
-          </div>
+          <RightTabWithApi @change="handleTabClick" />
         </card>
       </app-main>
       <right-panel v-if="showSettings">
@@ -51,9 +38,80 @@ import Breadcrumb from '@/components/Breadcrumb'
 import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
+import Thenable from '@/components/atoms/Thenable'
+import { service } from './service'
 
+const RightTab = {
+  props: {
+    list: {
+      type: Array,
+      default: () => []
+    }
+  },
+  data() {
+    return {
+      activeName: 'second'
+    }
+  },
+  methods: {
+    handleClick(item) {
+      localStorage.setItem('selectedTab', item.name)
+      this.$emit('change', item.name)
+    }
+  },
+  mounted() {
+    this.activeName = localStorage.getItem('selectedTab')
+  },
+  render() {
+    return (
+      <div style='display: flex;justify-content: center;align-items: center;'>
+        <div style='margin: 0 20px;'>选择视角</div>
+        <el-tabs
+          vModel={this.activeName}
+          class='app-main-tabs'
+          {...{
+            on: {
+              'tab-click': (item) => this.handleClick(item)
+            }
+          }}
+        >
+          {this.list.map((item) => (
+            <el-tab-pane label={item.name} name={String(item.o_id)} />
+          ))}
+        </el-tabs>
+      </div>
+    )
+  }
+}
+
+const RightTabWithApi = {
+  components: {
+    Thenable
+  },
+  render() {
+    return (
+      <Thenable
+        {...{
+          props: {
+            runner: service.gettablist.bind(service),
+            default: [],
+            callback: (data) => data.list
+          },
+          scopedSlots: {
+            default: ({ result: { data }}) => <RightTab list={data} {...{ on: this.$listeners }} />
+          }
+        }}
+      ></Thenable>
+    )
+  }
+}
 export default {
   name: 'Layout',
+  provide() {
+    return {
+      layout: this
+    }
+  },
   components: {
     Card,
     Breadcrumb,
@@ -62,9 +120,15 @@ export default {
     RightPanel,
     Settings,
     Sidebar,
-    TagsView
+    TagsView,
+    RightTabWithApi
   },
   mixins: [ResizeMixin],
+  data() {
+    return {
+      activeName: 'second'
+    }
+  },
   computed: {
     ...mapState({
       sidebar: (state) => state.app.sidebar,
@@ -82,14 +146,12 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      activeName: 'second'
-    }
+  mounted() {
+    this.activeName = localStorage.getItem('selectedTab')
   },
   methods: {
-    handleClick(tab, event) {
-      console.log(tab, event)
+    handleTabClick(type) {
+      this.activeName = type
     },
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })

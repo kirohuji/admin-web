@@ -11,6 +11,15 @@ export default {
       background: false
     }
   }),
+  computed: {
+    pagination() {
+      return {
+        limit: this.page['page-size'],
+        page: this.$refs.pagination.currentPage,
+        total: this.page.total
+      }
+    }
+  },
   watch: {
     data: {
       handler() {
@@ -23,9 +32,11 @@ export default {
   methods: {
     handleSizeChange(data) {
       console.log(data)
+      this.$emit('change')
     },
     handleCurrentChange(data) {
       console.log(data)
+      this.$emit('change')
     }
   },
   render() {

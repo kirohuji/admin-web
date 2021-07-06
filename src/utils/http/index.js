@@ -1,5 +1,4 @@
 import axios from 'axios'
-import store from '@/store'
 import { findIndex } from 'lodash'
 import { DonMessage } from '@/components/atoms/DonMessage'
 import router from '@/router'
@@ -65,10 +64,12 @@ const _axios = axios.create(config)
 _axios.interceptors.request.use(
   (cfg) => {
     // Do something before request is sent
-    const { token } = store.getters
-    if (token) {
-      cfg.headers.common['Authorization'] = token
-    }
+    localStorage.getItem('token')
+    // const { token } = store.getters
+    // if (token) {
+    //   cfg.headers.common['Authorization'] = token
+    // }
+    cfg.headers.common['Authorization'] = localStorage.getItem('token')
     removePending(cfg) // 在请求开始前，对之前的请求做检查取消操作
     addPending(cfg) // 将当前请求添加到 pending 中
     return cfg

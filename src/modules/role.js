@@ -1,15 +1,14 @@
-const module = 'c_admin/user/usermanage'
-export class User {
-  constructor(user_id, name, node_id, remark, status, node_name) {
-    this.user_id = user_id
+const module = 'c_admin/user/rolemanage'
+export class Role {
+  constructor(r_id, name, node_id, describe, node_name) {
+    this.r_id = r_id
     this.node_id = node_id
     this.name = name
-    this.remark = remark
-    this.status = status
+    this.describe = describe
     this.node_name = node_name
   }
 }
-export class UserService {
+export class RoleService {
   constructor(api) {
     this.makeUserService(api)
     this.module = module

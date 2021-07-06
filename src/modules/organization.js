@@ -15,7 +15,7 @@ export class NodeMenu {
     this.type = type
   }
 }
-export class OrganmanageService {
+export class OrganizationService {
   constructor({ api }) {
     this.api = api
   }
@@ -52,12 +52,10 @@ export class OrganmanageService {
   //   }
   // 获取机构字典
   gettablist() {
-    return this.api.post(`${module}/gettabtypedata`)
+    return this.api.post(`${module}/gettablist`)
   }
   // 获取机构字典列表
-  gettabtypedata(o_id) {
-    return this.api.post(`${module}/gettabtypedata`, {
-      o_id
-    })
+  gettabtypedata(target) {
+    return this.api.post(`${module}/gettabtypedata`, target)
   }
 }

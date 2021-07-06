@@ -1,3 +1,17 @@
+import { organizationService, roleService } from './service'
+function deleteChildren(arr) {
+  const childs = arr
+  for (let i = childs.length; i--; i > 0) {
+    if (childs[i].children) {
+      if (childs[i].children.length) {
+        deleteChildren(childs[i].children)
+      } else {
+        delete childs[i].children
+      }
+    }
+  }
+  return arr
+}
 export default {
   search: {
     col: 0,
@@ -12,8 +26,25 @@ export default {
       {
         label: '所属机构',
         prop: 'aduit',
-        component: 'select',
-        size: 'small'
+        component: 'cascader',
+        size: 'small',
+        isReal: true,
+        async: true,
+        props: {
+          value: 'node_id',
+          label: 'name',
+          checkStrictly: true
+        },
+        options: function() {
+          return {
+            runner: organizationService.gettabtypedata.bind(organizationService),
+            params: {
+              o_id: localStorage.getItem('selectedTab')
+            },
+            default: [],
+            callback: (data) => deleteChildren(data.list)
+          }
+        }
       }
     ]
   },
@@ -23,11 +54,27 @@ export default {
       {
         label: '所属单位',
         prop: 'org',
-        component: 'input',
-        type: 'input',
+        component: 'cascader',
         placeholder: '卫健局',
         size: 'small',
-        required: true
+        disabled: true,
+        required: true,
+        async: true,
+        props: {
+          value: 'node_id',
+          label: 'name',
+          checkStrictly: true
+        },
+        options: function() {
+          return {
+            runner: organizationService.gettabtypedata.bind(organizationService),
+            params: {
+              o_id: localStorage.getItem('selectedTab')
+            },
+            default: [],
+            callback: (data) => deleteChildren(data.list)
+          }
+        }
       },
       {
         label: '姓名',
@@ -44,44 +91,48 @@ export default {
         component: 'input',
         type: 'input',
         placeholder: '请输入内容',
-        size: 'small',
-        required: true
+        size: 'small'
       },
-      {
-        label: '钉钉账号',
-        prop: 'dingding',
-        component: 'input',
-        type: 'input',
-        placeholder: '请输入内容',
-        size: 'small',
-        required: true
-      },
+      // {
+      //   label: '钉钉账号',
+      //   prop: 'dingding',
+      //   component: 'input',
+      //   type: 'input',
+      //   placeholder: '请输入内容',
+      //   size: 'small',
+      //   required: true
+      // },
       {
         label: '所属角色',
         prop: 'roles',
         component: 'radio-border-group',
         size: 'small',
         style: 'width: 598px',
-        options: [
-          {
-            label: '卫健信息科长'
-          },
-          {
-            label: '疾控科科长'
-          },
-          {
-            label: '卫健局局长'
-          },
-          {
-            label: '基位科长'
-          },
-          {
-            label: '卫健局局长'
-          },
-          {
-            label: '基位科长1'
+        async: true,
+        props: {
+          value: 'node_id',
+          label: 'name',
+          checkStrictly: true
+        },
+        options: function() {
+          console.log('this', this)
+          return {
+            runner: roleService.find.bind(roleService),
+            params: {
+              type: localStorage.getItem('selectedTab'),
+              node_id: this.table.selected.org[this.table.selected.org.length - 1]
+            },
+            default: [],
+            callback: (data) => {
+              return data.list.map((item) => {
+                return {
+                  label: item.name,
+                  value: item.r_id
+                }
+              })
+            }
           }
-        ]
+        }
       },
       {
         label: '备注',
@@ -90,9 +141,48 @@ export default {
         type: 'textarea',
         placeholder: '请输入内容',
         style: 'width: 400px',
-        size: 'small',
-        required: true
+        size: 'small'
       }
     ]
-  }
+  },
+  table: [
+    {
+      prop: 'name',
+      label: '姓名',
+      width: '120'
+    },
+    {
+      prop: 'node_name',
+      label: '所属机构',
+      width: '250'
+    },
+    {
+      prop: 'r_name',
+      label: '所属角色',
+      width: '100'
+    },
+    {
+      prop: 'remark',
+      label: '备注'
+    },
+    {
+      prop: 'status',
+      label: '状态',
+      width: '80',
+      formatter: (row) => {
+        switch (row.status) {
+          case 'allow':
+            return '在用'
+          case 'ban':
+            return '禁用'
+        }
+      }
+    },
+    {
+      prop: 'operation',
+      label: '操作',
+      width: '100',
+      scopedSlots: true
+    }
+  ]
 }

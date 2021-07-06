@@ -68,19 +68,10 @@ export const constantRoutes = [
     hidden: true
   },
   /** 首页 */
-  // {
-  //   path: '/',
-  //   component: Layout,
-  //   redirect: '/dashboard',
-  //   children: [
-  //     {
-  //       path: 'dashboard',
-  //       component: () => import('@/views/dashboard/index'),
-  //       name: 'Dashboard',
-  //       meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/',
+    redirect: '/information/infomanage'
+  },
   {
     path: '/information',
     component: Layout,
@@ -136,7 +127,7 @@ export const constantRoutes = [
       },
       {
         path: 'users',
-        component: () => import('@/views/users/index'),
+        component: () => import('@/views/users/index.vue'),
         name: 'users',
         meta: { title: '用户管理', icon: 'user', affix: true }
       },

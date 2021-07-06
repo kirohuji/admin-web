@@ -1,9 +1,10 @@
 import _ from 'lodash'
 import BaseEnter from '@/components/molecules/BaseEnter'
+import Thenable from '@/components/atoms/Thenable'
 import './style.scss'
 const FormItem = {
   name: 'FormItem',
-  props: ['item', 'value'],
+  props: ['item', 'value', 'context'],
   render() {
     return (
       <ElFormItem
@@ -11,12 +12,38 @@ const FormItem = {
           props: this.item
         }}
       >
-        <BaseEnter
-          {...{
-            props: { model: this.value },
-            attrs: this.item
-          }}
-        />
+        {this.item.async ? (
+          <Thenable
+            {...{
+              props: {
+                vm: this.context,
+                ...this.item.options.call(this.context)
+              },
+              scopedSlots: {
+                default: ({ result: { data }}) => (
+                  <BaseEnter
+                    {...{
+                      props: { model: this.value },
+                      attrs: {
+                        ...this.item,
+                        options: data
+                      },
+                      on: this.$listeners
+                    }}
+                  />
+                )
+              }
+            }}
+          ></Thenable>
+        ) : (
+          <BaseEnter
+            {...{
+              props: { model: this.value },
+              attrs: this.item,
+              on: this.$listeners
+            }}
+          />
+        )}
       </ElFormItem>
     )
   }
@@ -25,7 +52,7 @@ export default {
   /**
      * 表单的加载事件
      */
-  props: ['forms', 'buttons', 'data'],
+  props: ['forms', 'buttons', 'data', 'context'],
   component: {
     BaseEnter
   },
@@ -100,9 +127,13 @@ export default {
                       <FormItem
                         item={item}
                         value={this.model}
+                        context={this.context}
                         style={{
                           display: item.layout ? 'flex' : 'inline-block',
                           alignItems: item.layout
+                        }}
+                        {...{
+                          on: this.$listeners
                         }}
                       />
                     </ElCol>

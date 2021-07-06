@@ -1,6 +1,6 @@
 <template>
-  <el-input v-bind="$attrs">
-    <el-button slot="append" type="primary">搜索</el-button>
+  <el-input v-bind="$attrs" v-on="$listeners">
+    <el-button slot="append" type="primary" @click="() => $emit('search')">搜索</el-button>
   </el-input>
 </template>
 
