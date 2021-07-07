@@ -5,19 +5,20 @@ export default {
     col: 0,
     fields: [
       {
-        label: '宣教搜索',
+        label: '消息搜索',
         prop: 'title',
         component: 'search',
         placeholder: '根据标题名称、编号搜索',
         size: 'small'
       },
       {
-        label: '宣教分类',
+        label: '消息分类',
         prop: 'type',
-        component: 'cascader',
-        placeholder: '请选择宣教分类',
+        component: 'select',
+        placeholder: '请选择消息分类',
         async: true,
         isReal: true,
+        cached: 'news_type',
         props: {
           value: 'node_id',
           label: 'name',
@@ -35,23 +36,7 @@ export default {
       },
       {
         label: '状态',
-        prop: 'aduit',
-        component: 'select',
-        options: [
-          {
-            label: '上线中'
-          },
-          {
-            label: '草稿'
-          },
-          {
-            label: '已下架'
-          }
-        ]
-      },
-      {
-        label: '发布主体',
-        prop: 'aduit',
+        prop: 'status',
         component: 'select',
         options: [
           {
@@ -67,7 +52,7 @@ export default {
       },
       {
         label: '日期',
-        prop: 'aduit',
+        prop: 'date',
         component: 'date-picker',
         type: 'date',
         placeholder: '选择日期',
@@ -135,14 +120,10 @@ export default {
         component: 'edit'
       },
       {
-        label: '备注',
+        label: '对象',
         prop: 'remark',
-        component: 'input',
-        type: 'textarea',
-        placeholder: '请输入内容',
-        style: 'width: 400px',
-        size: 'small',
-        required: true
+        component: 'tag-select',
+        size: 'small'
       }
     ]
   },
@@ -167,7 +148,7 @@ export default {
       width: '100'
     },
     {
-      prop: 'pub_name',
+      prop: 'status',
       label: '目标对象',
       width: '120'
     },

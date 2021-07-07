@@ -23,14 +23,14 @@ export class RoleService {
   }
   // @flow
   delin(target) {
-    return this.api.post(`${this.module}/setuseralloworno`, target)
+    return this.api.post(`${this.module}/delrole`, target)
   }
   // @flow
   update(target) {
     return this.api.post(`${this.module}/edituser`, target)
   }
   findOne(target) {
-    return this.api.post(`${this.module}/getuserinfo`, target)
+    return this.api.post(`${this.module}/getroleinfo`, target)
   }
   // 搜索、列表
   // @flow

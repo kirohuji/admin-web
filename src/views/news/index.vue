@@ -10,7 +10,7 @@
         @search="() => tableData.refresh.call(tableData, $refs.dataSearchForm.model)"
       >
         <template v-slot:right>
-          <el-button type="primary" @click="$router.push(`/information/infomanage/edit/${0}`)">新建资讯</el-button>
+          <el-button type="primary" @click="$router.push(`/information/infomanage/edit/${0}`)">新建消息</el-button>
         </template>
       </DataSearchForm>
     </Card>
@@ -28,7 +28,7 @@
         </template>
       </DataTable>
     </Card>
-    <BaseDialog ref="formDialog" title="新建宣教">
+    <BaseDialog ref="formDialog" title="新建消息">
       <DataForm :forms="config.form" label-position="right" :data="table.selected" />
     </BaseDialog>
   </div>

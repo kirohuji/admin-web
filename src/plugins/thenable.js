@@ -13,7 +13,6 @@ class Thenable {
       this.run()
     }
     for (var key in this.variables) {
-      console.log(key)
       this.defineReactiveSetter(key, key, true)
     }
   }

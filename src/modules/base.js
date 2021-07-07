@@ -26,4 +26,7 @@ export class Service {
   findOne(target) {
     return this.api.post(`${this.module}/getinfo`, target)
   }
+  find(target) {
+    return this.api.post(`${this.module}/getlist`, target)
+  }
 }

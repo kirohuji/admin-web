@@ -109,6 +109,12 @@ export const constantRoutes = [
         component: () => import('@/views/active/index'),
         name: 'active',
         meta: { title: '活动管理', icon: 'user', affix: true }
+      },
+      {
+        path: 'news',
+        component: () => import('@/views/news/index'),
+        name: 'news',
+        meta: { title: '消息管理', icon: 'user', affix: true }
       }
     ]
   },

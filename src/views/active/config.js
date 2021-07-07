@@ -1,3 +1,5 @@
+import { deleteChildren } from '@/utils'
+import { service } from './service'
 export default {
   search: {
     col: 0,
@@ -13,47 +15,27 @@ export default {
         label: '活动分类',
         prop: 'type',
         component: 'select',
-        options: [
-          {
-            label: '饮食宣教'
-          },
-          {
-            label: '护理常识'
-          },
-          {
-            label: '康复宣教'
-          },
-          {
-            label: '安全宣教'
-          },
-          {
-            label: '疾病宣教'
-          },
-          {
-            label: '药物知识'
+        placeholder: '请选择活动分类',
+        async: true,
+        isReal: true,
+        props: {
+          value: 'node_id',
+          label: 'name',
+          checkStrictly: true
+        },
+        options: function() {
+          return {
+            runner: service.getcategorylist.bind(service),
+            params: {},
+            default: [],
+            callback: (data) => deleteChildren(data.list)
           }
-        ],
+        },
         size: 'small'
       },
       {
         label: '状态',
-        prop: 'aduit',
-        component: 'select',
-        options: [
-          {
-            label: '上线中'
-          },
-          {
-            label: '草稿'
-          },
-          {
-            label: '已下架'
-          }
-        ]
-      },
-      {
-        label: '发布主体',
-        prop: 'aduit',
+        prop: 'status',
         component: 'select',
         options: [
           {
@@ -69,7 +51,7 @@ export default {
       },
       {
         label: '日期',
-        prop: 'aduit',
+        prop: 'date',
         component: 'date-picker',
         type: 'date',
         placeholder: '选择日期',
@@ -143,5 +125,57 @@ export default {
         size: 'small'
       }
     ]
-  }
+  },
+  table: [
+    {
+      prop: 'node_id',
+      label: '编号',
+      width: '100'
+    },
+    {
+      prop: 'c_name',
+      label: '分类',
+      width: '200'
+    },
+    {
+      prop: 'title',
+      label: '标题名称'
+    },
+    {
+      prop: 'status',
+      label: '状态',
+      width: '100'
+    },
+    {
+      prop: 'status',
+      label: '目标对象',
+      width: '120'
+    },
+    {
+      prop: 'tag_read_count',
+      label: '已读人数/目标人数',
+      width: '200'
+    },
+    {
+      prop: 'status',
+      label: '阅读率',
+      width: '120'
+    },
+    {
+      prop: 'updated_at',
+      label: '更新时间',
+      width: '120'
+    },
+    {
+      prop: 'admin_name',
+      label: '操作人',
+      width: '120'
+    },
+    {
+      prop: 'operation',
+      label: '操作',
+      width: '200',
+      scopedSlots: true
+    }
+  ]
 }

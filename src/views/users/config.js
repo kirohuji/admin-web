@@ -1,16 +1,14 @@
+import { deleteChildren } from '@/utils'
 import { organizationService, roleService } from './service'
-function deleteChildren(arr) {
-  const childs = arr
-  for (let i = childs.length; i--; i > 0) {
-    if (childs[i].children) {
-      if (childs[i].children.length) {
-        deleteChildren(childs[i].children)
-      } else {
-        delete childs[i].children
-      }
-    }
+const orgOptions = function() {
+  return {
+    runner: organizationService.gettabtypedata.bind(organizationService),
+    params: {
+      o_id: localStorage.getItem('selectedTab')
+    },
+    default: [],
+    callback: (data) => deleteChildren(data.list)
   }
-  return arr
 }
 export default {
   search: {
@@ -30,21 +28,13 @@ export default {
         size: 'small',
         isReal: true,
         async: true,
+        cached: 'aduit',
         props: {
           value: 'node_id',
           label: 'name',
           checkStrictly: true
         },
-        options: function() {
-          return {
-            runner: organizationService.gettabtypedata.bind(organizationService),
-            params: {
-              o_id: localStorage.getItem('selectedTab')
-            },
-            default: [],
-            callback: (data) => deleteChildren(data.list)
-          }
-        }
+        options: orgOptions
       }
     ]
   },
@@ -60,21 +50,13 @@ export default {
         disabled: true,
         required: true,
         async: true,
+        cached: 'aduit',
         props: {
           value: 'node_id',
           label: 'name',
           checkStrictly: true
         },
-        options: function() {
-          return {
-            runner: organizationService.gettabtypedata.bind(organizationService),
-            params: {
-              o_id: localStorage.getItem('selectedTab')
-            },
-            default: [],
-            callback: (data) => deleteChildren(data.list)
-          }
-        }
+        options: orgOptions
       },
       {
         label: '姓名',

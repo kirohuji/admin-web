@@ -1,6 +1,6 @@
 import { Service } from './base'
-const module = 'c_admin/information/infomanage'
-export class Infomanage {
+const module = 'c_admin/information/prpgd_edu'
+export class PrpgdEdu {
   constructor(i_id, node_id, title, image, content, status) {
     this.i_id = i_id
     this.node_id = node_id
@@ -10,16 +10,12 @@ export class Infomanage {
     this.status = status
   }
 }
-export class InfomanageService extends Service {
+export class PrpgdEduService extends Service {
   constructor({ api }) {
     super({ api, module })
   }
   //  分类列表
   getcategorylist() {
     return this.api.post(`${this.module}/getcategorylist`)
-  }
-  //  发布主体列表
-  getpublist() {
-    return this.api.post(`${this.module}/getpublist`)
   }
 }

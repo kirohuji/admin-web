@@ -1,3 +1,5 @@
+import { deleteChildren } from '@/utils'
+import { organizationService } from './service'
 export default {
   search: {
     col: 0,
@@ -12,8 +14,25 @@ export default {
       {
         label: '所属机构',
         prop: 'aduit',
-        component: 'select',
-        size: 'small'
+        component: 'cascader',
+        size: 'small',
+        isReal: true,
+        async: true,
+        props: {
+          value: 'node_id',
+          label: 'name',
+          checkStrictly: true
+        },
+        options: function() {
+          return {
+            runner: organizationService.gettabtypedata.bind(organizationService),
+            params: {
+              o_id: localStorage.getItem('selectedTab')
+            },
+            default: [],
+            callback: (data) => deleteChildren(data.list)
+          }
+        }
       }
     ]
   },
@@ -21,17 +40,33 @@ export default {
     col: 1,
     fields: [
       {
-        label: '所属机构',
-        prop: 'date',
-        component: 'input',
-        type: 'input',
+        label: '所属单位',
+        prop: 'org',
+        component: 'cascader',
         placeholder: '卫健局',
         size: 'small',
-        required: true
+        disabled: true,
+        required: true,
+        async: true,
+        props: {
+          value: 'node_id',
+          label: 'name',
+          checkStrictly: true
+        },
+        options: function() {
+          return {
+            runner: organizationService.gettabtypedata.bind(organizationService),
+            params: {
+              o_id: localStorage.getItem('selectedTab')
+            },
+            default: [],
+            callback: (data) => deleteChildren(data.list)
+          }
+        }
       },
       {
         label: '角色名称',
-        prop: 'date',
+        prop: 'name',
         component: 'input',
         type: 'input',
         placeholder: '卫健局',
@@ -47,7 +82,7 @@ export default {
       },
       {
         label: '发布账号',
-        prop: 'date',
+        prop: 'pub_info',
         component: 'input',
         type: 'input',
         placeholder: '卫健局',
@@ -55,7 +90,7 @@ export default {
       },
       {
         label: '角色描述',
-        prop: 'date',
+        prop: 'describe',
         component: 'input',
         type: 'textarea',
         placeholder: '请输入内容',
@@ -63,5 +98,23 @@ export default {
         size: 'small'
       }
     ]
-  }
+  },
+  table: [
+    {
+      prop: 'name',
+      label: '角色名称',
+      width: '300'
+    },
+    {
+      prop: 'description',
+      label: '角色描述'
+    },
+    {
+      fixed: 'right',
+      prop: 'operation',
+      label: '操作',
+      width: '150',
+      scopedSlots: true
+    }
+  ]
 }

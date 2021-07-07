@@ -1,22 +1,39 @@
 <template>
   <div>
     <Card style="padding: 14px;padding-bottom: 0">
-      <DataSearchForm :forms="config.search" label-position="right" style="justify-content: space-between;">
+      <DataSearchForm
+        ref="dataSearchForm"
+        mode="search"
+        :forms="config.search"
+        label-position="right"
+        style="justify-content: space-between;"
+        @search="() => tableData.refresh.call(tableData, $refs.dataSearchForm.model)"
+      >
         <template v-slot:right>
-          <el-button @click="$refs.formDialog.open()">新建角色</el-button>
+          <el-button
+            @click="
+              () => {
+                table.selected = {
+                  org: $refs.dataSearchForm.model.aduit,
+                }
+                $refs.formDialog.open()
+              }
+            "
+          >新建角色</el-button>
         </template>
       </DataSearchForm>
     </Card>
     <Card style="padding: 14px;padding-top: 0">
-      <DataTable v-bind="table" style="padding: 0">
-        <template v-slot:operation>
-          <div>
+      <DataTable v-bind="table" style="padding: 0" @change="tableData.refresh.call(tableData)">
+        <template v-slot:operation="{ row }">
+          <div style="display: flex;justify-content: space-around">
             <el-link type="primary" @click="$refs.authorizeDialog.open()">授权</el-link>
             <el-link
               type="primary"
               @click="
                 () => {
                   table.selected = row
+                  tableSelected.refresh()
                   $refs.formDialog.open()
                 }
               "
@@ -27,7 +44,20 @@
       </DataTable>
     </Card>
     <BaseDialog ref="formDialog" title="新增用户">
-      <DataForm :forms="config.form" label-position="right" />
+      <DataForm :forms="config.form" label-position="right" :data="info" />
+      <template v-slot:footer>
+        <div class="footer">
+          <el-button @click="$refs.formDialog.close()">取消</el-button>
+          <el-button
+            type="primary"
+            @click="
+              () => {
+                handleSubmit()
+              }
+            "
+          >保存</el-button>
+        </div>
+      </template>
     </BaseDialog>
     <BaseDialog ref="authorizeDialog" title="角色授权" width="200">
       <AuthorizeLayout left="用户搜索" right="居民权限">
@@ -50,6 +80,7 @@ import BaseDialog from '@/components/molecules/BaseDialog.vue'
 import Card from '@/components/atoms/Card'
 import config from './config'
 import DataTree from '@/components/organisms/DataTree'
+import { service } from './service'
 const AuthorizeLayout = ({ props: { left, right }, scopedSlots }) => (
   <div
     style={{
@@ -69,6 +100,7 @@ const AuthorizeLayout = ({ props: { left, right }, scopedSlots }) => (
   </div>
 )
 export default {
+  inject: ['layout'],
   components: {
     Card,
     DataTable,
@@ -81,53 +113,79 @@ export default {
   data() {
     return {
       config: config,
+      node_id: 0,
+      info: {},
       table: {
         selected: {},
-        data: [
-          {
-            name: '王真',
-            sex: '男',
-            age: 43,
-            card: '330324199708025997',
-            type: '脱贫',
-            country: '普格县',
-            towns: '花山镇',
-            address: '补觉村015号',
-            source: '系统预警',
-            content: '年度医疗自费支出4540',
-            chance: '高',
-            date: '2021.01.21 10:211',
-            audit: '待审核',
-            audit_date: '-'
-          }
-        ],
-        column: [
-          {
-            prop: 'name',
-            label: '角色名称',
-            width: '300'
-          },
-          {
-            prop: 'description',
-            label: '角色描述'
-          },
-          {
-            fixed: 'right',
-            prop: 'operation',
-            label: '操作',
-            width: '150',
-            scopedSlots: true
-          }
-        ]
+        data: [],
+        column: config.table
+      }
+    }
+  },
+  computed: {
+    type() {
+      return this.layout.activeName
+    },
+    searcher() {
+      return this.$refs.dataSearchForm.model
+    },
+    r_id() {
+      return this.table.selected.r_id
+    }
+  },
+  thenable: {
+    tableSelected() {
+      return {
+        target: 'info',
+        runner: service.findOne.bind(service),
+        variables: {
+          type: this.type,
+          r_id: this.r_id
+        },
+        callback: (res) => {
+          return res.list
+        },
+        immediate: false
+      }
+    },
+    tableData() {
+      return {
+        target: 'table.data',
+        runner: service.find.bind(service),
+        variables: {
+          type: this.type,
+          node_id: this.node_id
+        },
+        callback: (res) => {
+          return res.list
+        },
+        immediate: true
       }
     }
   },
   methods: {
-    handleSearch(model) {
-      console.log(model)
+    handleSubmit() {
+      service
+        .insert({
+          ...this.$refs.dataForm.model,
+          type: this.type,
+          node_id: this.node_id
+        })
+        .then(() => {
+          this.$message.success('插入成功')
+          this.$refs.formDialog.close()
+        })
+      // roleService.insert()
     },
-    onSubmit() {
-      console.log('submit!')
+    handleDelete(model) {
+      service
+        .delin({
+          type: this.type,
+          ...model
+        })
+        .then((res) => {
+          this.$message('删除成功')
+        })
     }
   }
 }
