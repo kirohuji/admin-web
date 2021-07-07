@@ -22,4 +22,11 @@ export class InfomanageService extends Service {
   getpublist() {
     return this.api.post(`${this.module}/getpublist`)
   }
+  //  下架
+  setpull(target) {
+    return this.api.post(`${this.module}/setpull`, target)
+  }
+  getmembertagcount(target) {
+    return this.api.post(`${this.module}/getmembertagcount`, target)
+  }
 }

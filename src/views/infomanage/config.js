@@ -52,9 +52,10 @@ export default {
       },
       {
         label: '发布主体',
-        prop: 'aduit',
+        prop: 'pub_id',
         isReal: true,
         component: 'select',
+        clearable: true,
         async: true,
         options: function() {
           return {
@@ -73,13 +74,16 @@ export default {
       },
       {
         label: '日期',
-        prop: 'aduit',
+        prop: 'date',
         component: 'date-picker',
-        type: 'date',
+        type: 'daterange',
         isReal: true,
         placeholder: '选择日期',
-        'value-format': 'yyyy-MM-dd HH:mm',
-        format: 'yyyy-MM-dd HH:mm',
+        'range-separator': '至',
+        'value-format': 'yyyy-MM-dd',
+        format: 'yyyy-MM-dd',
+        'start-placeholder': '开始日期',
+        'end-placeholder': '结束日期',
         size: 'small'
       }
     ]
@@ -187,6 +191,11 @@ export default {
     {
       prop: 'updated_at',
       label: '更新时间',
+      width: '120'
+    },
+    {
+      prop: 'pub_name',
+      label: '发布主体',
       width: '120'
     },
     {
