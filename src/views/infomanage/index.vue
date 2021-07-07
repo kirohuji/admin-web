@@ -51,7 +51,6 @@ export default {
   data() {
     return {
       config: config,
-      node_id: 1,
       table: {
         selected: {},
         data: [],

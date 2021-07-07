@@ -14,11 +14,10 @@ export default {
       {
         label: '消息分类',
         prop: 'type',
-        component: 'select',
+        component: 'cascader',
         placeholder: '请选择消息分类',
         async: true,
         isReal: true,
-        cached: 'news_type',
         props: {
           value: 'node_id',
           label: 'name',
@@ -54,10 +53,14 @@ export default {
         label: '日期',
         prop: 'date',
         component: 'date-picker',
-        type: 'date',
+        type: 'daterange',
+        isReal: true,
         placeholder: '选择日期',
-        'value-format': 'yyyy-MM-dd HH:mm',
-        format: 'yyyy-MM-dd HH:mm',
+        'range-separator': '至',
+        'value-format': 'yyyy-MM-dd',
+        format: 'yyyy-MM-dd',
+        'start-placeholder': '开始日期',
+        'end-placeholder': '结束日期',
         size: 'small'
       }
     ]
@@ -67,40 +70,36 @@ export default {
     fields: [
       {
         label: '发布账号',
-        prop: 'title',
+        prop: 'user',
         component: 'label',
-        required: true
+        required: true,
+        default: 'test'
       },
       {
         label: '分类',
-        prop: 'date',
+        prop: 'node_id',
         component: 'radio-group',
         layout: 'center',
-        options: [
-          {
-            label: '饮食宣教'
-          },
-          {
-            label: '护理常识'
-          },
-          {
-            label: '康复宣教'
-          },
-          {
-            label: '安全宣教'
-          },
-          {
-            label: '疾病宣教'
-          },
-          {
-            label: '药物知识'
+        async: true,
+        options: function() {
+          return {
+            runner: service.getcategorylist.bind(service),
+            params: {},
+            default: [],
+            callback: (data) =>
+              data.list.map((item) => {
+                return {
+                  label: item.name,
+                  value: item.node_id
+                }
+              })
           }
-        ],
+        },
         required: true
       },
       {
         label: '标题',
-        prop: 'phone',
+        prop: 'title',
         component: 'input',
         placeholder: '请输入内容数字限制30字内',
         size: 'small',
@@ -108,7 +107,7 @@ export default {
       },
       {
         label: '封面',
-        prop: 'dingding',
+        prop: 'image',
         component: 'image',
         placeholder: '请输入内容',
         size: 'small',
@@ -116,12 +115,12 @@ export default {
       },
       {
         label: '编辑',
-        prop: 'roles',
+        prop: 'content',
         component: 'edit'
       },
       {
         label: '对象',
-        prop: 'remark',
+        prop: 'tag',
         component: 'tag-select',
         size: 'small'
       }

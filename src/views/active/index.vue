@@ -7,7 +7,7 @@
         label-position="right"
         style="justify-content: space-between;"
         mode="search"
-        @search="() => tableData.refresh.call(tableData, $refs.dataSearchForm.model)"
+        @search="() => tableData.refresh.call(tableData, searcher)"
       >
         <template v-slot:right>
           <el-button type="primary" @click="$router.push(`/information/infomanage/edit/${0}`)">新建资讯</el-button>
@@ -21,9 +21,13 @@
             <router-link :to="`/information/infomanage/edit/${row.id}`">
               <el-link type="primary">编辑</el-link>
             </router-link>
-            <el-link type="primary">下架</el-link>
-            <el-link type="primary">复制</el-link>
-            <el-link type="primary">删除</el-link>
+            <el-link
+              :type="row.status !== 2 ? 'primary' : ''"
+              :disabled="row.status === 2"
+              @click="handleSetPull(row)"
+            >下架</el-link>
+            <el-link type="primary" @click="handleCopy(row)">复制</el-link>
+            <el-link type="primary" @click="handleDelete(row)">删除</el-link>
           </div>
         </template>
       </DataTable>
@@ -67,7 +71,12 @@ export default {
       return this.layout.activeName
     },
     searcher() {
-      return this.$refs.dataSearchForm.model
+      return {
+        ...this.$refs.dataSearchForm.model,
+        node_id: this.$refs.dataSearchForm.model.type.join(''),
+        s_date: this.$refs.dataSearchForm.model.date && this.$refs.dataSearchForm.model.date[0],
+        e_date: this.$refs.dataSearchForm.model.date && this.$refs.dataSearchForm.model.date[1]
+      }
     }
   },
   thenable: {
@@ -87,11 +96,65 @@ export default {
     }
   },
   methods: {
-    handleSearch(model) {
-      console.log(model)
+    handleSetPull(row) {
+      service.setpull(row).then((res) => {
+        this.$message.success('下架成功')
+      })
     },
-    onSubmit() {
-      console.log('submit!')
+    handleCopy(row) {
+      this.$confirm('确定复制当前资讯内容并存为新的草稿?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          service
+            .findOne({
+              i_id: row.i_id
+            })
+            .then(async({ data }) => {
+              delete data.i_id
+              data.title = data.title + '(拷贝)'
+              data.status = 0
+              data.types = this.types
+              data.tag = data.object_arr.map((item) => item.key).join(',')
+              service
+                .getmembertagcount({
+                  name: data.tag
+                })
+                .then((res) => {
+                  data.tag_count = res.data.count
+                  service.insert(data).then((res) => {
+                    this.$message.success('复制成功')
+                    this.tableData.refresh()
+                  })
+                })
+            })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消复制'
+          })
+        })
+    },
+    handleDelete(row) {
+      this.$confirm('删除内容不可回复，确认是否删除？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          service.remove(row).then((res) => {
+            this.$message.success('删除成功')
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     }
   }
 }

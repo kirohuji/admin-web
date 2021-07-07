@@ -18,4 +18,18 @@ export class PrpgdEduService extends Service {
   getcategorylist() {
     return this.api.post(`${this.module}/getcategorylist`)
   }
+  //  发布主体列表
+  getpublist() {
+    return this.api.post(`${this.module}/getpublist`)
+  }
+  //  下架
+  setpull(target) {
+    return this.api.post(`${this.module}/setpull`, target)
+  }
+  getmembertagcount(target) {
+    return this.api.post(`${this.module}/getmembertagcount`, target)
+  }
+  getmembertag(target) {
+    return this.api.post(`${this.module}/getmembertag`, target)
+  }
 }

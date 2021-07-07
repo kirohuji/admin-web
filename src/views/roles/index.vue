@@ -38,7 +38,7 @@
                 }
               "
             >编辑</el-link>
-            <el-link type="primary">删除</el-link>
+            <el-link type="primary" @click="handleDelete(row)">删除</el-link>
           </div>
         </template>
       </DataTable>
@@ -178,13 +178,26 @@ export default {
       // roleService.insert()
     },
     handleDelete(model) {
-      service
-        .delin({
-          type: this.type,
-          ...model
+      this.$confirm('删除内容不可回复，确认是否删除？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          service
+            .delin({
+              type: this.type,
+              ...model
+            })
+            .then((res) => {
+              this.$message('删除成功')
+            })
         })
-        .then((res) => {
-          this.$message('删除成功')
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
         })
     }
   }
