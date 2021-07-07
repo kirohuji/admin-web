@@ -43,14 +43,13 @@ export default {
     fields: [
       {
         label: '所属单位',
-        prop: 'org',
+        prop: 'node_id',
         component: 'cascader',
         placeholder: '卫健局',
         size: 'small',
         disabled: true,
         required: true,
         async: true,
-        cached: 'aduit',
         props: {
           value: 'node_id',
           label: 'name',
@@ -86,7 +85,7 @@ export default {
       // },
       {
         label: '所属角色',
-        prop: 'roles',
+        prop: 'r_id',
         component: 'radio-border-group',
         size: 'small',
         style: 'width: 598px',
@@ -102,7 +101,7 @@ export default {
             runner: roleService.find.bind(roleService),
             params: {
               type: localStorage.getItem('selectedTab'),
-              node_id: this.table.selected.org[this.table.selected.org.length - 1]
+              node_id: 0
             },
             default: [],
             callback: (data) => {
