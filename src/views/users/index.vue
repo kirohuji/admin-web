@@ -31,6 +31,7 @@
               type="primary"
               @click="
                 () => {
+
                   table.selected = row
                   $refs.formDialog.open()
                 }
@@ -87,6 +88,10 @@ export default {
   },
   data() {
     return {
+      dialog: {
+        mode: 'edit',
+        title: '编辑用户'
+      },
       config: config,
       node_id: 0,
       table: {
@@ -142,6 +147,7 @@ export default {
           ...this.searcher
         })
         .then(() => {
+          this.$message.success('操作成功')
           this.tableData.refresh()
         })
     }
