@@ -21,24 +21,23 @@
             <router-link :to="`/information/infomanage/edit/${row.id}`">
               <el-link type="primary">编辑</el-link>
             </router-link>
-            <el-link :type="row.status !== 2 ? 'primary' : ''" disabled @click="handleSetPull(row)">下架</el-link>
+            <el-link
+              :type="row.status !== 2 ? 'primary' : ''"
+              :disabled="row.status === 2"
+              @click="handleSetPull(row)"
+            >下架</el-link>
             <el-link type="primary" @click="handleCopy(row)">复制</el-link>
             <el-link type="primary" @click="handleDelete(row)">删除</el-link>
           </div>
         </template>
       </DataTable>
     </Card>
-    <BaseDialog ref="formDialog" title="新建宣教">
-      <DataForm :forms="config.form" label-position="right" :data="table.selected" />
-    </BaseDialog>
   </div>
 </template>
 
 <script>
 import DataTable from '@/components/organisms/DataTable'
 import DataSearchForm from '@/components/organisms/DataSearchForm'
-import DataForm from '@/components/organisms/DataForm'
-import BaseDialog from '@/components/molecules/BaseDialog.vue'
 import Card from '@/components/atoms/Card'
 import config from './config'
 import { service } from './service'
@@ -47,9 +46,7 @@ export default {
   components: {
     Card,
     DataTable,
-    DataSearchForm,
-    DataForm,
-    BaseDialog
+    DataSearchForm
   },
   data() {
     return {
@@ -69,6 +66,7 @@ export default {
     searcher() {
       return {
         ...this.$refs.dataSearchForm.model,
+        node_id: this.$refs.dataSearchForm.model.type.join(''),
         s_date: this.$refs.dataSearchForm.model.date && this.$refs.dataSearchForm.model.date[0],
         e_date: this.$refs.dataSearchForm.model.date && this.$refs.dataSearchForm.model.date[1]
       }
@@ -80,8 +78,7 @@ export default {
         target: 'table.data',
         runner: service.find.bind(service),
         variables: {
-          types: this.types,
-          node_id: this.node_id
+          types: this.types
         },
         callback: (res) => {
           return res.list
@@ -109,6 +106,7 @@ export default {
             })
             .then(async({ data }) => {
               delete data.i_id
+              data.title = data.title + '(拷贝)'
               data.status = 0
               data.types = this.types
               data.tag = data.object_arr.map((item) => item.key).join(',')
@@ -120,6 +118,7 @@ export default {
                   data.tag_count = res.data.count
                   service.insert(data).then((res) => {
                     this.$message.success('复制成功')
+                    this.tableData.refresh()
                   })
                 })
             })

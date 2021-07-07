@@ -29,4 +29,7 @@ export class InfomanageService extends Service {
   getmembertagcount(target) {
     return this.api.post(`${this.module}/getmembertagcount`, target)
   }
+  getmembertag(target) {
+    return this.api.post(`${this.module}/getmembertag`, target)
+  }
 }

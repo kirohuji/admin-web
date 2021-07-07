@@ -93,40 +93,36 @@ export default {
     fields: [
       {
         label: '发布账号',
-        prop: 'title',
+        prop: 'user',
         component: 'label',
-        required: true
+        required: true,
+        default: 'test'
       },
       {
         label: '分类',
-        prop: 'date',
+        prop: 'node_id',
         component: 'radio-group',
         layout: 'center',
-        options: [
-          {
-            label: '饮食宣教'
-          },
-          {
-            label: '护理常识'
-          },
-          {
-            label: '康复宣教'
-          },
-          {
-            label: '安全宣教'
-          },
-          {
-            label: '疾病宣教'
-          },
-          {
-            label: '药物知识'
+        async: true,
+        options: function() {
+          return {
+            runner: service.getcategorylist.bind(service),
+            params: {},
+            default: [],
+            callback: (data) =>
+              data.list.map((item) => {
+                return {
+                  label: item.name,
+                  value: item.node_id
+                }
+              })
           }
-        ],
+        },
         required: true
       },
       {
         label: '标题',
-        prop: 'phone',
+        prop: 'title',
         component: 'input',
         placeholder: '请输入内容数字限制30字内',
         size: 'small',
@@ -134,7 +130,7 @@ export default {
       },
       {
         label: '封面',
-        prop: 'dingding',
+        prop: 'image',
         component: 'image',
         placeholder: '请输入内容',
         size: 'small',
@@ -142,12 +138,12 @@ export default {
       },
       {
         label: '编辑',
-        prop: 'roles',
+        prop: 'content',
         component: 'edit'
       },
       {
         label: '对象',
-        prop: 'remark',
+        prop: 'tag',
         component: 'tag-select',
         size: 'small'
       }
