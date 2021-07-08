@@ -16,7 +16,7 @@ import DataTree from '@/components/organisms/DataTree'
 import MenusCard from '@/vocationals/MenusCard'
 // import { NodeMenu } from '@/modules/organmanage'
 import test from './test'
-
+import { service } from './service'
 const OperationButtons = () => (
   <div style='display: flex;justify-content: center;'>
     <el-button>取消</el-button>
@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       organmanage: {
-        menus: test.menus,
+        menus: [],
         tree: test.tree
       }
     }
@@ -42,6 +42,16 @@ export default {
   methods: {
     handleMenu(menu) {
       console.log(menu)
+    }
+  },
+  thenable: {
+    tableData() {
+      return {
+        target: 'organmanage.menus',
+        runner: service.gettablist.bind(service),
+        callback: (data) => data.list,
+        immediate: true
+      }
     }
   }
 }
