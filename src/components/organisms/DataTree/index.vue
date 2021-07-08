@@ -1,9 +1,10 @@
 <template>
   <div class="custom-tree-container">
     <div class="block">
-      <el-tree :data="list" v-bind="$attrs" node-key="node_id" :expand-on-click-node="false">
-        <span slot-scope="{ node }" class="custom-tree-node">
-          <span>{{ node.data.name }}</span>
+      <el-tree ref="tree" v-bind="$attrs" :node-key="id || 'node_id'" :expand-on-click-node="false">
+        <span slot-scope="{ node }" class="custom-tree-node" :style="{ 'justify-content': $attrs.layout }">
+          <span>{{ node.data[name || 'name'] }}</span>
+          <slot name="operation" :node="node.data" />
         </span>
       </el-tree>
     </div>
@@ -11,7 +12,18 @@
 </template>
 
 <script>
-export default {}
+export default {
+  // eslint-disable-next-line vue/require-prop-types
+  props: ['id', 'name'],
+  methods: {
+    getCheckedKeys() {
+      return this.$refs.tree.getCheckedKeys()
+    },
+    getHalfCheckedKeys() {
+      return this.$refs.tree.getHalfCheckedKeys()
+    }
+  }
+}
 </script>
 <style lang="scss">
 .custom-tree-node {

@@ -19,7 +19,7 @@ export class RoleService {
   }
   // @flow
   insert(target) {
-    return this.api.post(`${this.module}/createuser`, target)
+    return this.api.post(`${this.module}/createrole`, target)
   }
   // @flow
   delin(target) {
@@ -27,7 +27,7 @@ export class RoleService {
   }
   // @flow
   update(target) {
-    return this.api.post(`${this.module}/edituser`, target)
+    return this.api.post(`${this.module}/editrole`, target)
   }
   findOne(target) {
     return this.api.post(`${this.module}/getroleinfo`, target)
@@ -39,5 +39,11 @@ export class RoleService {
       ...projection,
       ...options
     })
+  }
+  setrbacrole(target) {
+    return this.api.post(`${this.module}/setrbacrole`, target)
+  }
+  getrbacrole(target) {
+    return this.api.post(`${this.module}/getrbacrole`, target)
   }
 }

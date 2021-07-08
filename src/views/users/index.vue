@@ -23,10 +23,7 @@
       >
         <template v-slot:operation="{ row }">
           <div style="display: flex;justify-content: space-around">
-            <el-link
-              type="primary"
-              @click="handleUpdate(row)"
-            >编辑</el-link>
+            <el-link type="primary" @click="handleUpdate(row)">编辑</el-link>
             <el-link
               type="primary"
               @click="
@@ -40,17 +37,8 @@
         </template>
       </DataTable>
     </Card>
-    <BaseDialog
-      ref="formDialog"
-      v-bind="dialog"
-    >
-      <DataForm
-        ref="dataForm"
-        :forms="config.form"
-        label-position="right"
-        :context="this"
-        :data="table.selected"
-      />
+    <BaseDialog ref="formDialog" v-bind="dialog">
+      <DataForm ref="dataForm" :forms="config.form" label-position="right" :context="this" :data="table.selected" />
       <template v-slot:footer>
         <div class="footer">
           <el-button @click="$refs.formDialog.close()">取消</el-button>
@@ -92,7 +80,7 @@ export default {
         title: '编辑用户'
       },
       config: config,
-      node_id: 0,
+      node_id: 12,
       table: {
         selected: {},
         data: [],
@@ -147,7 +135,7 @@ export default {
       const form = this.$refs.dataForm.model
       switch (this.dialog.mode) {
         case 'update':
-          form.node_id = 0
+          form.node_id = 12
           service
             .update({
               ...form,
@@ -156,10 +144,11 @@ export default {
             .then(() => {
               this.$message.success('编辑成功')
               this.$refs.formDialog.close()
+              this.tableData.refresh()
             })
           break
         case 'insert':
-          form.node_id = 0
+          form.node_id = 12
           service
             .insert({
               ...form,
@@ -168,6 +157,7 @@ export default {
             .then(() => {
               this.$message.success('新建成功')
               this.$refs.formDialog.close()
+              this.tableData.refresh()
             })
           break
       }
@@ -190,18 +180,18 @@ export default {
 
 <style lang="scss" scoped>
 ::v-deep .color-header {
-  th {
-    padding: 0 0;
-    background-color: rgba(229, 229, 229, 1);
+    th {
+        padding: 0 0;
+        background-color: rgba(229, 229, 229, 1);
 
-    .cell {
-      color: #333;
+        .cell {
+            color: #333;
+        }
     }
-  }
 
-  td {
-    border: 1px solid rgba(198, 198, 198, 1);
-  }
-  // border: 1px solid rgba(229, 229, 229, 1);
+    td {
+        border: 1px solid rgba(198, 198, 198, 1);
+    }
+    // border: 1px solid rgba(229, 229, 229, 1);
 }
 </style>

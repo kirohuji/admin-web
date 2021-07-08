@@ -4,7 +4,7 @@ const orgOptions = function() {
   return {
     runner: organizationService.gettabtypedata.bind(organizationService),
     params: {
-      o_id: localStorage.getItem('selectedTab')
+      o_id: Number(localStorage.getItem('selectedTab')) - 1
     },
     default: [],
     callback: (data) => deleteChildren(data.list)
@@ -15,7 +15,7 @@ export default {
     col: 0,
     fields: [
       {
-        label: '角色搜索',
+        label: '用户搜索',
         prop: 'title',
         component: 'search',
         placeholder: '根据标题名称、编号搜索',

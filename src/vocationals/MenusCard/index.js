@@ -12,10 +12,10 @@ export default ({ props, data, listeners }) => (
   <Card {...data}>
     <div class='menu-title'>{_.isString(props.title) ? props.title : h(props.title)}</div>
     {props.list && (
-      <el-menu default-active={props.list.length && String(props.list[0].o_id)}>
+      <el-menu default-active={props.list.length && String(props.list[0][props.index])}>
         {props.list.map((item) => (
           <el-menu-item
-            index={String(item.o_id)}
+            index={String(item[props.index])}
             onClick={() => listeners.click(item)}
             class='dic-menu'
             style={{

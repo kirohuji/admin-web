@@ -1,11 +1,11 @@
 <template>
   <Card class="main-layout">
-    <MenusCard class="left" style="flex-grow: 1;" v-bind="organmanage.menus" @click="handleMenu" />
+    <MenusCard class="left" index="o_id" style="flex-grow: 1;" v-bind="organmanage.menus" @click="handleMenu" />
     <div style="flex-grow: 8;">
       <Card class="right" style="height: 700px;overflow-y:scroll;padding: 25px 20px">
-        <DataTree :list="organmanage.tree.list" show-checkbox />
+        <DataTree :data="organmanage.tree" />
       </Card>
-      <OperationButtons />
+      <!-- <OperationButtons /> -->
     </div>
   </Card>
 </template>
@@ -14,43 +14,66 @@
 import Card from '@/components/atoms/Card'
 import DataTree from '@/components/organisms/DataTree'
 import MenusCard from '@/vocationals/MenusCard'
-// import { NodeMenu } from '@/modules/organmanage'
-import test from './test'
 import { service } from './service'
-const OperationButtons = () => (
-  <div style='display: flex;justify-content: center;'>
-    <el-button>取消</el-button>
-    <el-button type='primary'>保存</el-button>
-  </div>
-)
+// const OperationButtons = () => (
+//   <div style='display: flex;justify-content: center;'>
+//     <el-button>取消</el-button>
+//     <el-button type='primary'>保存</el-button>
+//   </div>
+// )
 
 export default {
   components: {
     Card,
     DataTree,
-    MenusCard,
-    OperationButtons
+    MenusCard
+    // OperationButtons
   },
   data() {
     return {
       organmanage: {
-        menus: [],
-        tree: test.tree
+        menus: {
+          current: '',
+          title: '机构字典',
+          list: []
+        },
+        tree: []
       }
+    }
+  },
+  computed: {
+    o_id() {
+      return this.organmanage.menus.current
     }
   },
   methods: {
     handleMenu(menu) {
-      console.log(menu)
+      this.organmanage.menus.current = menu.o_id
+      this.treeData.refresh()
     }
   },
   thenable: {
-    tableData() {
+    menuData() {
       return {
-        target: 'organmanage.menus',
+        target: 'organmanage.menus.list',
         runner: service.gettablist.bind(service),
-        callback: (data) => data.list,
+        callback: (data) => {
+          this.organmanage.menus.current = data.list[0].o_id
+          this.treeData.refresh()
+          return data.list
+        },
         immediate: true
+      }
+    },
+    treeData() {
+      return {
+        target: 'organmanage.tree',
+        runner: service.gettabtypedata.bind(service),
+        variables: {
+          o_id: this.o_id
+        },
+        callback: (data) => data.list,
+        immediate: false
       }
     }
   }

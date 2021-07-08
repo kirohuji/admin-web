@@ -15,43 +15,21 @@
       </DataSearchForm>
     </Card>
     <Card style="padding: 14px;padding-top: 0">
-      <DataTable
-        v-bind="table"
-        style="padding: 0"
-        @change="tableData.refresh.call(tableData)"
-      >
+      <DataTable v-bind="table" style="padding: 0" @change="tableData.refresh.call(tableData)">
         <template v-slot:operation="{ row }">
           <div style="display: flex;justify-content: space-around">
-            <el-link
-              type="primary"
-              @click="$refs.authorizeDialog.open()"
-            >授权</el-link>
-            <el-link
-              type="primary"
-              @click="handleUpdate(row)"
-            >编辑</el-link>
-            <el-link
-              type="primary"
-              @click="handleDelete(row)"
-            >删除</el-link>
+            <el-link type="primary" @click="handleAuthorize(row)">授权</el-link>
+            <el-link type="primary" @click="handleUpdate(row)">编辑</el-link>
+            <el-link type="primary" @click="handleDelete(row)">删除</el-link>
           </div>
         </template>
       </DataTable>
     </Card>
-    <BaseDialog
-      ref="formDialog"
-      title="新增用户"
-    >
-      <DataForm
-        ref="dataForm"
-        :forms="config.form"
-        label-position="right"
-        :context="this"
-        :data="table.selected"
-      />
+    <BaseDialog ref="formDialog" v-bind="dialog" @close="handleFormDialogClose">
+      <DataForm ref="dataForm" :forms="config.form" label-position="right" :context="this" :data="table.selected" />
       <template v-slot:footer>
         <div class="footer">
-          <el-button @click="$refs.formDialog.close()">取消</el-button>
+          <el-button @click="handleFormDialogClose">取消</el-button>
           <el-button
             type="primary"
             @click="
@@ -63,22 +41,28 @@
         </div>
       </template>
     </BaseDialog>
-    <BaseDialog
-      ref="authorizeDialog"
-      title="角色授权"
-      width="200"
-    >
-      <AuthorizeLayout
-        left="用户搜索"
-        right="居民权限"
-      >
+    <BaseDialog ref="authorizeDialog" title="角色授权" width="200">
+      <AuthorizeLayout left="用户搜索" right="居民权限">
         <template v-slot:left>
-          <DataTree />
+          <DataTree id="name" ref="rbacNodeList" :data="authorize.rbac_node_list" show-checkbox name="title" />
         </template>
         <template v-slot:right>
-          <DataTree />
+          <DataTree ref="memberNodeList" :data="authorize.member_node_list" show-checkbox />
         </template>
       </AuthorizeLayout>
+      <template v-slot:footer>
+        <div class="footer">
+          <el-button @click="$refs.authorizeDialog.close()">取消</el-button>
+          <el-button
+            type="primary"
+            @click="
+              () => {
+                handleAuthorizeSubmit()
+              }
+            "
+          >保存</el-button>
+        </div>
+      </template>
     </BaseDialog>
   </div>
 </template>
@@ -92,6 +76,7 @@ import Card from '@/components/atoms/Card'
 import config from './config'
 import DataTree from '@/components/organisms/DataTree'
 import { service } from './service'
+import _ from 'lodash'
 const AuthorizeLayout = ({ props: { left, right }, scopedSlots }) => (
   <div
     style={{
@@ -123,7 +108,14 @@ export default {
   },
   data() {
     return {
-      dialog: {},
+      dialog: {
+        mode: '',
+        title: ''
+      },
+      authorize: {
+        rbac_node_list: [],
+        member_node_list: []
+      },
       config: config,
       node_id: 0,
       info: {},
@@ -145,7 +137,26 @@ export default {
       return this.table.selected.r_id
     }
   },
+  created() {
+    console.log(this)
+  },
   thenable: {
+    authorizeData() {
+      return {
+        runner: service.getrbacrole.bind(service),
+        variables: () => {
+          return {
+            type: this.type,
+            r_id: this.r_id
+          }
+        },
+        callback: (res) => {
+          this.authorize = res
+          this.$refs.authorizeDialog.open()
+        },
+        immediate: false
+      }
+    },
     tableData() {
       return {
         target: 'table.data',
@@ -162,10 +173,41 @@ export default {
     }
   },
   methods: {
+    handleFormDialogClose() {
+      this.table.selected = {}
+      this.$refs.formDialog.close()
+    },
+    handleAuthorizeSubmit() {
+      console.log(this.$refs.rbacNodeList.getCheckedKeys())
+      console.log(this.$refs.memberNodeList.getCheckedKeys())
+      service
+        .setrbacrole({
+          type: this.type,
+          r_id: this.r_id,
+          rbac_node_arr: [
+            ...this.$refs.rbacNodeList.getCheckedKeys(),
+            ...this.$refs.rbacNodeList.getHalfCheckedKeys()
+          ].join(','),
+          member_node_arr: [
+            ...this.$refs.memberNodeList.getCheckedKeys(),
+            this.$refs.memberNodeList.getHalfCheckedKeys()
+          ].join(','),
+          admin_role_info: ''
+        })
+        .then((res) => {
+          this.$message.success('设置成功')
+          this.authorizeData.refresh()
+        })
+    },
+    handleAuthorize(row) {
+      this.table.selected = row
+      this.authorizeData.refresh()
+    },
     handleCreate() {
       this.dialog.title = '新建角色'
       this.dialog.mode = 'insert'
       this.$refs.formDialog.open()
+      this.$refs.dataForm.resetFields()
     },
     handleUpdate(row) {
       this.dialog.mode = 'update'
@@ -176,35 +218,43 @@ export default {
           type: this.type
         })
         .then(({ data }) => {
+          // data.admin_arr = data.admin_arr.map((item) => item.user_id)
           this.table.selected = data
           this.$refs.formDialog.open()
+          this.$refs.dataForm.resetFields()
         })
     },
     handleSubmit() {
-      const form = this.$refs.dataForm.model
-      //   debugger;
-      //   form.admin_arr = form.admin_arr.split(',')
-
+      const form = _.cloneDeep(this.$refs.dataForm.model)
+      form.node_id = 12
+      if (form.admin_arr) {
+        form.admin_arr = form.admin_arr.join(',')
+      }
       switch (this.dialog.mode) {
         case 'update':
           service
             .update({
-              ...form
+              ...form,
+              type: this.type
             })
             .then(() => {
               this.$message.success('编辑成功')
+              this.table.selected = {}
               this.$refs.formDialog.close()
+              this.tableData.refresh()
             })
           break
         case 'insert':
-          form.node_id = 0
           service
             .insert({
-              ...form
+              ...form,
+              type: this.type
             })
             .then(() => {
               this.$message.success('新建成功')
+              this.table.selected = {}
               this.$refs.formDialog.close()
+              this.tableData.refresh()
             })
           break
       }
@@ -239,18 +289,18 @@ export default {
 
 <style lang="scss" scoped>
 ::v-deep .color-header {
-  th {
-    padding: 0 0;
-    background-color: rgba(229, 229, 229, 1);
+    th {
+        padding: 0 0;
+        background-color: rgba(229, 229, 229, 1);
 
-    .cell {
-      color: #333;
+        .cell {
+            color: #333;
+        }
     }
-  }
 
-  td {
-    border: 1px solid rgba(198, 198, 198, 1);
-  }
-  // border: 1px solid rgba(229, 229, 229, 1);
+    td {
+        border: 1px solid rgba(198, 198, 198, 1);
+    }
+    // border: 1px solid rgba(229, 229, 229, 1);
 }
 </style>

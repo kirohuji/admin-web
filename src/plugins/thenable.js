@@ -10,6 +10,9 @@ class Thenable {
     this.target = target
     this.init(data)
     if (this.immediate) {
+      // for (var key in this.variables) {
+      //   this.defineReactiveSetter(key, key, true)
+      // }
       this.run()
     }
     for (var key in this.variables) {
@@ -24,7 +27,6 @@ class Thenable {
     }
   }
   destroy() {
-    console.log('销毁啦')
     for (let _i = 0, _this$_watchers = this._watchers; _i < _this$_watchers.length; _i++) {
       const unwatch = _this$_watchers[_i]
       unwatch()
@@ -53,14 +55,16 @@ class Thenable {
     this.run(search)
   }
   run(search = {}) {
+    this.result.loading = true
     this.runner({
-      ...this.variables,
+      ...(typeof this.variables === 'function' ? this.variables.call(this.vm) : this.variables),
       ...search
     })
       .then((res) => this.callback.call(this.vm, res.data))
       .then((res) => {
         _.set(this.vm, this.target, res)
         this.result.data = res
+        this.result.loading = false
       })
   }
 }
@@ -229,11 +233,13 @@ function launch() {
     })
     for (var key in thenable) {
       if (key.charAt(0) !== '$') {
-        thenable[key] = new Thenable({
-          vm: _this,
-          ...thenable[key].call(_this)
-        })
-        _this[key] = thenable[key]
+        if (typeof thenable[key] === 'function') {
+          thenable[key] = new Thenable({
+            vm: _this,
+            ...thenable[key].call(_this)
+          })
+          _this[key] = thenable[key]
+        }
       }
     }
   }

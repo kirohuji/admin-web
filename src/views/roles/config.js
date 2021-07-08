@@ -1,5 +1,5 @@
 import { deleteChildren } from '@/utils'
-import { organizationService } from './service'
+import { organizationService, dicmanageService } from './service'
 export default {
   search: {
     col: 0,
@@ -77,22 +77,42 @@ export default {
         label: '用户成员',
         prop: 'admin_arr',
         component: 'import',
+        props: {
+          value: 'user_id',
+          label: 'name'
+        },
         multiple: true,
         size: 'small'
       },
       {
         label: '发布账号',
-        prop: 'pub_info',
-        component: 'input',
-        type: 'input',
+        prop: 'pub_id',
+        component: 'select',
         placeholder: '卫健局',
-        size: 'small'
+        size: 'small',
+        'allow-create': true,
+        async: true,
+        options: function() {
+          return {
+            runner: dicmanageService.gettabtypedata.bind(dicmanageService),
+            params: {
+              c_id: 5
+            },
+            default: [],
+            callback: (data) =>
+              deleteChildren(data.list).map((item) => {
+                return {
+                  label: item.name,
+                  value: item.node_id
+                }
+              })
+          }
+        }
       },
       {
         label: '角色描述',
         prop: 'describe',
         component: 'input',
-        type: 'textarea',
         placeholder: '请输入内容',
         style: 'width: 400px',
         size: 'small'

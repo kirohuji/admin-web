@@ -21,7 +21,7 @@
           >
             <span>当前位置:</span><breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
           </div>
-          <RightTabWithApi @change="handleTabClick" />
+          <RightTab :list="tab" @change="handleTabClick" />
         </card>
       </app-main>
       <!-- <right-panel v-if="showSettings">
@@ -38,8 +38,8 @@ import Breadcrumb from '@/components/Breadcrumb'
 import { AppMain, Navbar, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
-import Thenable from '@/components/atoms/Thenable'
-import { service } from './service'
+// import Thenable from '@/components/atoms/Thenable'
+// import { service } from './service'
 
 const RightTab = {
   props: {
@@ -84,27 +84,27 @@ const RightTab = {
   }
 }
 
-const RightTabWithApi = {
-  components: {
-    Thenable
-  },
-  render() {
-    return (
-      <Thenable
-        {...{
-          props: {
-            runner: service.gettablist.bind(service),
-            default: [],
-            callback: (data) => data.list
-          },
-          scopedSlots: {
-            default: ({ result: { data }}) => <RightTab list={data} {...{ on: this.$listeners }} />
-          }
-        }}
-      ></Thenable>
-    )
-  }
-}
+// const RightTabWithApi = {
+//   components: {
+//     Thenable
+//   },
+//   render() {
+//     return (
+//       <Thenable
+//         {...{
+//           props: {
+//             runner: service.gettablist.bind(service),
+//             default: [],
+//             callback: (data) => data.list
+//           },
+//           scopedSlots: {
+//             default: ({ result: { data }}) => <RightTab list={data} {...{ on: this.$listeners }} />
+//           }
+//         }}
+//       ></Thenable>
+//     )
+//   }
+// }
 export default {
   name: 'Layout',
   provide() {
@@ -121,12 +121,24 @@ export default {
     // Settings,
     Sidebar,
     TagsView,
-    RightTabWithApi
+    RightTab
   },
   mixins: [ResizeMixin],
   data() {
     return {
-      activeName: '1'
+      tab: [
+        {
+          o_id: 2,
+          name: '政府',
+          type: 'government'
+        },
+        {
+          o_id: 3,
+          name: '医疗',
+          type: 'medical'
+        }
+      ],
+      activeName: '2'
     }
   },
   computed: {

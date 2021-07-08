@@ -84,6 +84,9 @@ export default {
     }
   },
   methods: {
+    resetFields() {
+      this.$refs.form && this.$refs.form.resetFields()
+    },
     initData(data) {
       this.model = Object.assign(this.model, data)
     },
@@ -109,6 +112,7 @@ export default {
     return (
       <ElForm
         inline
+        ref='form'
         class='data-form'
         {...{
           props: {

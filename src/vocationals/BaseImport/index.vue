@@ -1,30 +1,10 @@
 <template>
   <div>
-    <el-select
-      v-bind="$attrs"
-      multiple
-      collapse-tags
-      placeholder="请选择"
-      v-on="$listeners"
-    >
-      <el-option
-        v-for="item in options"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      />
+    <el-select v-bind="$attrs" multiple collapse-tags placeholder="请选择" v-on="$listeners">
+      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
-    <el-button
-      type="primary"
-      style="margin-left: 8px"
-      @click="$refs.formDialog.open()"
-    >导入</el-button>
-    <BaseDialog
-      ref="formDialog"
-      title="用户导入"
-      append-to-body
-      :is-return="true"
-    >
+    <el-button type="primary" style="margin-left: 8px" @click="$refs.formDialog.open()">导入</el-button>
+    <BaseDialog ref="formDialog" title="用户导入" append-to-body :is-return="true">
       <Card style="padding: 14px;padding-bottom: 0">
         <DataSearchForm
           ref="dataSearchForm"
@@ -40,12 +20,7 @@
         </DataSearchForm>
       </Card>
       <Card style="padding: 14px;padding-top: 0">
-        <DataTable
-          ref="table"
-          v-bind="table"
-          style="padding: 0"
-          @change="tableData.refresh.call(tableData)"
-        />
+        <DataTable ref="table" v-bind="table" style="padding: 0" @change="tableData.refresh.call(tableData)" />
       </Card>
       <template v-slot:footer>
         <div class="footer">
@@ -71,6 +46,7 @@ import DataSearchForm from '@/components/organisms/DataSearchForm'
 import Card from '@/components/atoms/Card'
 import config from './config'
 import { service } from './service'
+import _ from 'lodash'
 export default {
   components: {
     Card,
@@ -81,6 +57,7 @@ export default {
   data() {
     return {
       config: config,
+      updated: true,
       table: {
         selected: {},
         data: [],
@@ -98,6 +75,12 @@ export default {
       return this.$refs.dataSearchForm.model
     }
   },
+  mounted() {
+    this.change()
+  },
+  // updated() {
+  //   this.change()
+  // },
   thenable: {
     tableData() {
       return {
@@ -115,15 +98,35 @@ export default {
     }
   },
   methods: {
+    change() {
+      if (this.$attrs.value) {
+        this.setData(
+          this.$attrs.value.map((item) => {
+            return {
+              label: item[this.$attrs.props.label],
+              value: item[this.$attrs.props.value]
+            }
+          })
+        )
+      }
+    },
+    setData(result) {
+      this.$emit(
+        'input',
+        result.map((item) => item.value)
+      )
+      this.options = _.uniqBy(this.options.concat(result), function(o) {
+        return o.value
+      })
+    },
     handleSubmit() {
-      const result = this.$refs.table.$refs.table.selection.map(item => {
+      const result = this.$refs.table.$refs.table.selection.map((item) => {
         return {
           label: item.name,
           value: item.user_id
         }
       })
-      this.$set(this.$attrs, 'value', result.map(item => item.value))
-      this.options = this.options.concat(result)
+      this.setData(result)
       this.$refs.formDialog.close()
     }
   }

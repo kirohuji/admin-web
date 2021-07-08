@@ -14,14 +14,11 @@ export class DicmanageService {
     return this
   }
   // 删除字典类型节点
-  deltypenode({ c_id, node_id }) {
-    return this.api.post(`${module}/deltypenode`, {
-      c_id,
-      node_id
-    })
+  remove(target) {
+    return this.api.post(`${module}/deltypenode`, target)
   }
   // 新增字典类型节点
-  createtypenode({ c_id, name, p_node_id }) {
+  insert({ c_id, name, p_node_id }) {
     return this.api.post(`${module}/createtypenode`, {
       c_id,
       name,
@@ -36,21 +33,15 @@ export class DicmanageService {
     })
   }
   // 修改字典类型节点
-  editnode({ c_id, name, node_id }) {
-    return this.api.post(`${module}/editnode`, {
-      c_id,
-      name,
-      node_id
-    })
+  update(target) {
+    return this.api.post(`${module}/edittypenode`, target)
   }
   // 获取字典类型分类左侧列表
   gettablist() {
-    return this.api.post(`${module}/gettabtypedata`)
+    return this.api.post(`${module}/gettablist`)
   }
   // 获取字典类型分类节点列表
-  gettabtypedata(c_id) {
-    return this.api.post(`${module}/gettabtypedata`, {
-      c_id
-    })
+  gettabtypedata(target) {
+    return this.api.post(`${module}/gettabtypedata`, target)
   }
 }
