@@ -10,32 +10,22 @@
         @search="() => tableData.refresh.call(tableData, $refs.dataSearchForm.model)"
       >
         <template v-slot:right>
-          <el-button
-            @click="
-              () => {
-                table.selected = {
-                  org: $refs.dataSearchForm.model.aduit,
-                }
-                $refs.formDialog.open()
-              }
-            "
-          >新建用户</el-button>
+          <el-button @click="handleCreate">新建用户</el-button>
         </template>
       </DataSearchForm>
     </Card>
     <Card style="padding: 14px;padding-top: 0">
-      <DataTable ref="table" v-bind="table" style="padding: 0" @change="tableData.refresh.call(tableData)">
+      <DataTable
+        ref="table"
+        v-bind="table"
+        style="padding: 0"
+        @change="tableData.refresh.call(tableData)"
+      >
         <template v-slot:operation="{ row }">
           <div style="display: flex;justify-content: space-around">
             <el-link
               type="primary"
-              @click="
-                () => {
-
-                  table.selected = row
-                  $refs.formDialog.open()
-                }
-              "
+              @click="handleUpdate(row)"
             >编辑</el-link>
             <el-link
               type="primary"
@@ -45,13 +35,22 @@
                   handleTrigger(row)
                 }
               "
-            >禁用</el-link>
+            >{{ row.status === 'ban' ? '开启' : '禁用' }}</el-link>
           </div>
         </template>
       </DataTable>
     </Card>
-    <BaseDialog ref="formDialog" title="新增用户">
-      <DataForm ref="dataForm" :forms="config.form" label-position="right" :context="this" :data="table.selected" />
+    <BaseDialog
+      ref="formDialog"
+      v-bind="dialog"
+    >
+      <DataForm
+        ref="dataForm"
+        :forms="config.form"
+        label-position="right"
+        :context="this"
+        :data="table.selected"
+      />
       <template v-slot:footer>
         <div class="footer">
           <el-button @click="$refs.formDialog.close()">取消</el-button>
@@ -89,7 +88,7 @@ export default {
   data() {
     return {
       dialog: {
-        mode: 'edit',
+        mode: 'update',
         title: '编辑用户'
       },
       config: config,
@@ -126,18 +125,52 @@ export default {
     }
   },
   methods: {
-    handleSubmit() {
+    handleCreate() {
+      this.dialog.title = '新建用户'
+      this.dialog.mode = 'insert'
+      this.$refs.formDialog.open()
+    },
+    handleUpdate(row) {
+      this.dialog.mode = 'update'
+      this.dialog.title = '编辑用户'
       service
-        .insert({
-          ...this.$refs.dataForm.model,
-          type: this.type,
-          node_id: this.node_id
+        .findOne({
+          ...row,
+          type: this.type
         })
-        .then(() => {
-          this.$message.success('插入成功')
-          this.$refs.formDialog.close()
+        .then(({ data }) => {
+          this.table.selected = data
+          this.$refs.formDialog.open()
         })
-      // roleService.insert()
+    },
+    handleSubmit() {
+      const form = this.$refs.dataForm.model
+      switch (this.dialog.mode) {
+        case 'update':
+          form.node_id = 0
+          service
+            .update({
+              ...form,
+              type: this.type
+            })
+            .then(() => {
+              this.$message.success('编辑成功')
+              this.$refs.formDialog.close()
+            })
+          break
+        case 'insert':
+          form.node_id = 0
+          service
+            .insert({
+              ...form,
+              type: this.type
+            })
+            .then(() => {
+              this.$message.success('新建成功')
+              this.$refs.formDialog.close()
+            })
+          break
+      }
     },
     handleTrigger(row) {
       service
@@ -157,18 +190,18 @@ export default {
 
 <style lang="scss" scoped>
 ::v-deep .color-header {
-    th {
-        padding: 0 0;
-        background-color: rgba(229, 229, 229, 1);
+  th {
+    padding: 0 0;
+    background-color: rgba(229, 229, 229, 1);
 
-        .cell {
-            color: #333;
-        }
+    .cell {
+      color: #333;
     }
+  }
 
-    td {
-        border: 1px solid rgba(198, 198, 198, 1);
-    }
-    // border: 1px solid rgba(229, 229, 229, 1);
+  td {
+    border: 1px solid rgba(198, 198, 198, 1);
+  }
+  // border: 1px solid rgba(229, 229, 229, 1);
 }
 </style>

@@ -1,0 +1,133 @@
+<template>
+  <div>
+    <el-select
+      v-bind="$attrs"
+      multiple
+      collapse-tags
+      placeholder="请选择"
+      v-on="$listeners"
+    >
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      />
+    </el-select>
+    <el-button
+      type="primary"
+      style="margin-left: 8px"
+      @click="$refs.formDialog.open()"
+    >导入</el-button>
+    <BaseDialog
+      ref="formDialog"
+      title="用户导入"
+      append-to-body
+      :is-return="true"
+    >
+      <Card style="padding: 14px;padding-bottom: 0">
+        <DataSearchForm
+          ref="dataSearchForm"
+          mode="search"
+          :forms="config.search"
+          label-position="right"
+          style="justify-content: space-between;"
+          @search="() => tableData.refresh.call(tableData, $refs.dataSearchForm.model)"
+        >
+          <template v-slot:right>
+            <div />
+          </template>
+        </DataSearchForm>
+      </Card>
+      <Card style="padding: 14px;padding-top: 0">
+        <DataTable
+          ref="table"
+          v-bind="table"
+          style="padding: 0"
+          @change="tableData.refresh.call(tableData)"
+        />
+      </Card>
+      <template v-slot:footer>
+        <div class="footer">
+          <el-button @click="$refs.formDialog.close()">取消</el-button>
+          <el-button
+            type="primary"
+            @click="
+              () => {
+                handleSubmit()
+              }
+            "
+          >保存</el-button>
+        </div>
+      </template>
+    </BaseDialog>
+  </div>
+</template>
+
+<script>
+import BaseDialog from '@/components/molecules/BaseDialog.vue'
+import DataTable from '@/components/organisms/DataTable'
+import DataSearchForm from '@/components/organisms/DataSearchForm'
+import Card from '@/components/atoms/Card'
+import config from './config'
+import { service } from './service'
+export default {
+  components: {
+    Card,
+    DataTable,
+    DataSearchForm,
+    BaseDialog
+  },
+  data() {
+    return {
+      config: config,
+      table: {
+        selected: {},
+        data: [],
+        column: config.table
+      },
+      options: [],
+      value: ''
+    }
+  },
+  computed: {
+    type() {
+      return localStorage.getItem('selectedTab')
+    },
+    searcher() {
+      return this.$refs.dataSearchForm.model
+    }
+  },
+  thenable: {
+    tableData() {
+      return {
+        target: 'table.data',
+        runner: service.find.bind(service),
+        variables: {
+          type: this.type,
+          node_id: 0
+        },
+        callback: (res) => {
+          return res.list
+        },
+        immediate: true
+      }
+    }
+  },
+  methods: {
+    handleSubmit() {
+      const result = this.$refs.table.$refs.table.selection.map(item => {
+        return {
+          label: item.name,
+          value: item.user_id
+        }
+      })
+      this.$set(this.$attrs, 'value', result.map(item => item.value))
+      this.options = this.options.concat(result)
+      this.$refs.formDialog.close()
+    }
+  }
+}
+</script>
+
+<style></style>

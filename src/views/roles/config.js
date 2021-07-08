@@ -41,7 +41,7 @@ export default {
     fields: [
       {
         label: '所属单位',
-        prop: 'org',
+        prop: 'node_id',
         component: 'cascader',
         placeholder: '卫健局',
         size: 'small',
@@ -75,7 +75,7 @@ export default {
       },
       {
         label: '用户成员',
-        prop: 'roles',
+        prop: 'admin_arr',
         component: 'import',
         multiple: true,
         size: 'small'

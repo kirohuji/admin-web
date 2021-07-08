@@ -20,7 +20,7 @@
     </template>
     <!-- 导入器 -->
     <template v-else-if="$attrs.component === 'import'">
-      <BaseImport v-model="model[$attrs.prop]" v-bind="$attrs" />
+      <BaseImport v-model="model[$attrs.prop]" v-bind="$attrs" v-on="$listeners" />
     </template>
     <!-- 搜索器 -->
     <template v-else-if="$attrs.component === 'search'">
@@ -65,7 +65,7 @@
 
 <script>
 import { regionData } from 'element-china-area-data'
-import BaseImport from '../BaseImport'
+import BaseImport from '@/vocationals/BaseImport'
 import BaseTagSelect from '@/vocationals/BaseTagSelect'
 import BaseSearch from '../BaseSearch'
 import BaseImageUpload from '../BaseImageUpload'

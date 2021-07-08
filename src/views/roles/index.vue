@@ -10,41 +10,45 @@
         @search="() => tableData.refresh.call(tableData, $refs.dataSearchForm.model)"
       >
         <template v-slot:right>
-          <el-button
-            @click="
-              () => {
-                table.selected = {
-                  org: $refs.dataSearchForm.model.aduit,
-                }
-                $refs.formDialog.open()
-              }
-            "
-          >新建角色</el-button>
+          <el-button @click="handleCreate">新建角色</el-button>
         </template>
       </DataSearchForm>
     </Card>
     <Card style="padding: 14px;padding-top: 0">
-      <DataTable v-bind="table" style="padding: 0" @change="tableData.refresh.call(tableData)">
+      <DataTable
+        v-bind="table"
+        style="padding: 0"
+        @change="tableData.refresh.call(tableData)"
+      >
         <template v-slot:operation="{ row }">
           <div style="display: flex;justify-content: space-around">
-            <el-link type="primary" @click="$refs.authorizeDialog.open()">授权</el-link>
             <el-link
               type="primary"
-              @click="
-                () => {
-                  table.selected = row
-                  tableSelected.refresh()
-                  $refs.formDialog.open()
-                }
-              "
+              @click="$refs.authorizeDialog.open()"
+            >授权</el-link>
+            <el-link
+              type="primary"
+              @click="handleUpdate(row)"
             >编辑</el-link>
-            <el-link type="primary" @click="handleDelete(row)">删除</el-link>
+            <el-link
+              type="primary"
+              @click="handleDelete(row)"
+            >删除</el-link>
           </div>
         </template>
       </DataTable>
     </Card>
-    <BaseDialog ref="formDialog" title="新增用户">
-      <DataForm :forms="config.form" label-position="right" :data="info" />
+    <BaseDialog
+      ref="formDialog"
+      title="新增用户"
+    >
+      <DataForm
+        ref="dataForm"
+        :forms="config.form"
+        label-position="right"
+        :context="this"
+        :data="table.selected"
+      />
       <template v-slot:footer>
         <div class="footer">
           <el-button @click="$refs.formDialog.close()">取消</el-button>
@@ -59,8 +63,15 @@
         </div>
       </template>
     </BaseDialog>
-    <BaseDialog ref="authorizeDialog" title="角色授权" width="200">
-      <AuthorizeLayout left="用户搜索" right="居民权限">
+    <BaseDialog
+      ref="authorizeDialog"
+      title="角色授权"
+      width="200"
+    >
+      <AuthorizeLayout
+        left="用户搜索"
+        right="居民权限"
+      >
         <template v-slot:left>
           <DataTree />
         </template>
@@ -112,6 +123,7 @@ export default {
   },
   data() {
     return {
+      dialog: {},
       config: config,
       node_id: 0,
       info: {},
@@ -134,20 +146,6 @@ export default {
     }
   },
   thenable: {
-    tableSelected() {
-      return {
-        target: 'info',
-        runner: service.findOne.bind(service),
-        variables: {
-          type: this.type,
-          r_id: this.r_id
-        },
-        callback: (res) => {
-          return res.list
-        },
-        immediate: false
-      }
-    },
     tableData() {
       return {
         target: 'table.data',
@@ -164,17 +162,52 @@ export default {
     }
   },
   methods: {
-    handleSubmit() {
+    handleCreate() {
+      this.dialog.title = '新建角色'
+      this.dialog.mode = 'insert'
+      this.$refs.formDialog.open()
+    },
+    handleUpdate(row) {
+      this.dialog.mode = 'update'
+      this.dialog.title = '编辑角色'
       service
-        .insert({
-          ...this.$refs.dataForm.model,
-          type: this.type,
-          node_id: this.node_id
+        .findOne({
+          ...row,
+          type: this.type
         })
-        .then(() => {
-          this.$message.success('插入成功')
-          this.$refs.formDialog.close()
+        .then(({ data }) => {
+          this.table.selected = data
+          this.$refs.formDialog.open()
         })
+    },
+    handleSubmit() {
+      const form = this.$refs.dataForm.model
+      //   debugger;
+      //   form.admin_arr = form.admin_arr.split(',')
+
+      switch (this.dialog.mode) {
+        case 'update':
+          service
+            .update({
+              ...form
+            })
+            .then(() => {
+              this.$message.success('编辑成功')
+              this.$refs.formDialog.close()
+            })
+          break
+        case 'insert':
+          form.node_id = 0
+          service
+            .insert({
+              ...form
+            })
+            .then(() => {
+              this.$message.success('新建成功')
+              this.$refs.formDialog.close()
+            })
+          break
+      }
       // roleService.insert()
     },
     handleDelete(model) {
@@ -206,18 +239,18 @@ export default {
 
 <style lang="scss" scoped>
 ::v-deep .color-header {
-    th {
-        padding: 0 0;
-        background-color: rgba(229, 229, 229, 1);
+  th {
+    padding: 0 0;
+    background-color: rgba(229, 229, 229, 1);
 
-        .cell {
-            color: #333;
-        }
+    .cell {
+      color: #333;
     }
+  }
 
-    td {
-        border: 1px solid rgba(198, 198, 198, 1);
-    }
-    // border: 1px solid rgba(229, 229, 229, 1);
+  td {
+    border: 1px solid rgba(198, 198, 198, 1);
+  }
+  // border: 1px solid rgba(229, 229, 229, 1);
 }
 </style>

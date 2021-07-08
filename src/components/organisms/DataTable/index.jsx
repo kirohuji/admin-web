@@ -43,6 +43,7 @@ export default {
     return (
       <div class='data-table'>
         <ElTable
+          ref="table"
           data={this.data}
           {...{
             props: {
