@@ -5,6 +5,8 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 // import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import { serviceContainer } from '@/composables/context-provider'
+export const service = serviceContainer.authService
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -19,8 +21,7 @@ router.beforeEach(async(to, from, next) => {
   document.title = getPageTitle(to.meta.title)
 
   // determine whether the user has logged in
-  const hasToken = localStorage.getItem('token') || to.query.code
-
+  const hasToken = localStorage.getItem('token')
   if (hasToken) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
@@ -30,6 +31,19 @@ router.beforeEach(async(to, from, next) => {
       next()
       NProgress.done()
     }
+  } else if (to.query.code) {
+    const code = to.query.code
+    localStorage.setItem('code', code)
+    service
+      .login({
+        code
+      })
+      .then(({ data }) => {
+        localStorage.setItem('user', JSON.stringify(data))
+        localStorage.setItem('token', data.api_token)
+        next({ path: '/' })
+        NProgress.done()
+      })
   } else {
     /* has no token*/
 

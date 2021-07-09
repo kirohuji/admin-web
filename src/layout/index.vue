@@ -75,16 +75,6 @@ const RightTab = {
     }
   },
   mounted() {
-    const code = this.$route.query.code || localStorage.getItem('code')
-    if (code && !localStorage.getItem('token')) {
-      localStorage.setItem('code', code)
-      service.login({
-        code
-      }).then(({ data }) => {
-        localStorage.setItem('user', JSON.stringify(data))
-        localStorage.setItem('token', data.api_token)
-      })
-    }
     if (localStorage.getItem('token')) {
       service.getrbacnode().then(({ data }) => {
         this.$store.dispatch('permission/generateRoutes', data.list)
