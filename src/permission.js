@@ -11,6 +11,7 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
+  // debugger
   // start progress bar
   NProgress.start()
 
@@ -18,7 +19,7 @@ router.beforeEach(async(to, from, next) => {
   document.title = getPageTitle(to.meta.title)
 
   // determine whether the user has logged in
-  const hasToken = localStorage.getItem('token')
+  const hasToken = localStorage.getItem('token') || to.query.code
 
   if (hasToken) {
     if (to.path === '/login') {
