@@ -7,6 +7,7 @@ import { InfomanageService } from '@/modules/infomanage'
 import { PrpgdEduService } from '@/modules/prpgd_edu'
 import { ActiveService } from '@/modules/active'
 import { NewsService } from '@/modules/news'
+import { AuthService } from '@/modules/auth'
 export const serviceContainer = {
   dicmanageService: new DicmanageService({ api }),
   organizationService: new OrganizationService({ api }),
@@ -15,5 +16,6 @@ export const serviceContainer = {
   infomanageService: new InfomanageService({ api }),
   prpgdEduService: new PrpgdEduService({ api }),
   activeService: new ActiveService({ api }),
-  newService: new NewsService({ api })
+  newService: new NewsService({ api }),
+  authService: new AuthService({ api })
 }

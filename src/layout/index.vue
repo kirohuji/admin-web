@@ -1,27 +1,42 @@
 <template>
-  <div :class="classObj" class="app-wrapper">
-    <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+  <div
+    :class="classObj"
+    class="app-wrapper"
+  >
+    <div
+      v-if="device === 'mobile' && sidebar.opened"
+      class="drawer-bg"
+      @click="handleClickOutside"
+    />
     <div :class="{ 'fixed-header': fixedHeader }">
       <navbar />
     </div>
 
     <!-- main -->
-    <div :class="{ hasTagsView: needTagsView }" class="main-container">
+    <div
+      :class="{ hasTagsView: needTagsView }"
+      class="main-container"
+    >
       <sidebar class="sidebar-container" />
       <app-main style="padding-left:8px">
         <tags-view v-if="needTagsView" />
-        <card
-          style="border-bottom: 1px solid #DCDFE6;display: flex;align-items: center;  justify-content: space-between;padding: 0px 16px"
-        >
+        <card style="border-bottom: 1px solid #DCDFE6;display: flex;align-items: center;  justify-content: space-between;padding: 0px 16px">
           <div
             style="
               display: flex;
               justify-content: center;
               align-items: center;"
           >
-            <span>当前位置:</span><breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+            <span>当前位置:</span>
+            <breadcrumb
+              id="breadcrumb-container"
+              class="breadcrumb-container"
+            />
           </div>
-          <RightTab :list="tab" @change="handleTabClick" />
+          <RightTab
+            :list="tab"
+            @change="handleTabClick"
+          />
         </card>
       </app-main>
       <!-- <right-panel v-if="showSettings">
@@ -39,7 +54,7 @@ import { AppMain, Navbar, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
 // import Thenable from '@/components/atoms/Thenable'
-// import { service } from './service'
+import { service } from './service'
 
 const RightTab = {
   props: {
@@ -60,6 +75,21 @@ const RightTab = {
     }
   },
   mounted() {
+    const code = this.$route.query.code || localStorage.getItem('code')
+    if (code && !localStorage.getItem('token')) {
+      localStorage.setItem('code', code)
+      service.login({
+        code
+      }).then(({ data }) => {
+        localStorage.setItem('user', JSON.stringify(data))
+        localStorage.setItem('token', data.api_token)
+      })
+    }
+    if (localStorage.getItem('token')) {
+      service.getrbacnode().then(({ data }) => {
+        this.$store.dispatch('permission/generateRoutes', data.list)
+      })
+    }
     this.activeName = localStorage.getItem('selectedTab')
   },
   render() {
@@ -176,47 +206,47 @@ export default {
 @import '~@/styles/mixin.scss';
 @import '~@/styles/variables.scss';
 .app-wrapper {
-    @include clearfix;
-    position: relative;
-    height: 100%;
-    width: 100%;
+  @include clearfix;
+  position: relative;
+  height: 100%;
+  width: 100%;
 
-    &.mobile.openSidebar {
-        position: fixed;
-        top: 0;
-    }
+  &.mobile.openSidebar {
+    position: fixed;
+    top: 0;
+  }
 }
 ::v-deep .app-main-tabs {
-    .el-tabs__header {
-        // padding: 4px;
-        margin: 0;
-    }
+  .el-tabs__header {
+    // padding: 4px;
+    margin: 0;
+  }
 }
 
 .drawer-bg {
-    background: #000;
-    opacity: 0.3;
-    width: 100%;
-    top: 0;
-    height: 100%;
-    position: absolute;
-    z-index: 999;
+  background: #000;
+  opacity: 0.3;
+  width: 100%;
+  top: 0;
+  height: 100%;
+  position: absolute;
+  z-index: 999;
 }
 
 .fixed-header {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 9;
-    width: calc(100% - #{$sideBarWidth});
-    transition: width 0.28s;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9;
+  width: calc(100% - #{$sideBarWidth});
+  transition: width 0.28s;
 }
 
 .hideSidebar .fixed-header {
-    width: calc(100% - 54px);
+  width: calc(100% - 54px);
 }
 
 .mobile .fixed-header {
-    width: 100%;
+  width: 100%;
 }
 </style>

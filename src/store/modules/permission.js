@@ -1,18 +1,30 @@
-import { asyncRoutes, constantRoutes } from '@/router'
-
+import { constantRoutes } from '@/router'
+import _ from 'lodash'
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
  * @param route
  */
-function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
+function hasPermission(role, route) {
+  if (route.meta && route.meta.code) {
+    if (Array.isArray(route.meta.code)) {
+      return isContained(role, route.meta.code)
+    } else {
+      return role.includes(route.meta.code)
+    }
   } else {
-    return true
+    return false
   }
 }
-
+const isContained = (a, b) => {
+  if (!(a instanceof Array) || !(b instanceof Array)) return false
+  if (a.length < b.length) return false
+  var aStr = a.toString()
+  for (var i = 0, len = b.length; i < len; i++) {
+    if (aStr.indexOf(b[i]) == -1) return false
+  }
+  return true
+}
 /**
  * Filter asynchronous routing tables by recursion
  * @param routes asyncRoutes
@@ -21,7 +33,7 @@ function hasPermission(roles, route) {
 export function filterAsyncRoutes(routes, roles) {
   const res = []
 
-  routes.forEach(route => {
+  routes.forEach((route) => {
     const tmp = { ...route }
     if (hasPermission(roles, tmp)) {
       if (tmp.children) {
@@ -36,34 +48,39 @@ export function filterAsyncRoutes(routes, roles) {
 
 const state = {
   routes: [],
-  addRoutes: []
+  addRoutes: [],
 }
 
 const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
-    state.routes = constantRoutes.concat(routes)
-  }
+    state.routes = routes
+  },
 }
 
 const actions = {
-  generateRoutes({ commit }, roles) {
-    return new Promise(resolve => {
+  generateRoutes({ commit }, data) {
+    return new Promise((resolve) => {
       let accessedRoutes
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      }
+      const flat = (data) =>
+        data.reduce((pre, cur) => {
+          return cur.children ? pre.concat(cur.children) : pre.concat(cur)
+        }, [])
+      accessedRoutes = filterAsyncRoutes(
+        constantRoutes,
+        flat(flat(data))
+          .concat(flat(data))
+          .map((item) => item.name)
+      )
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })
-  }
+  },
 }
 
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
 }
