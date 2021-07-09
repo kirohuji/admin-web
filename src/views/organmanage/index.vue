@@ -1,9 +1,16 @@
 <template>
   <Card class="main-layout">
-    <MenusCard class="left" index="o_id" style="flex-grow: 1;" v-bind="organmanage.menus" @click="handleMenu" />
+    <MenusCard
+      v-loading="menuData.loading"
+      class="left"
+      index="o_id"
+      style="flex-grow: 1;"
+      v-bind="organmanage.menus"
+      @click="handleMenu"
+    />
     <div style="flex-grow: 8;">
       <Card class="right" style="height: 700px;overflow-y:scroll;padding: 25px 20px">
-        <DataTree :data="organmanage.tree" />
+        <DataTree v-loading="treeData.loading" :data="organmanage.tree" />
       </Card>
       <!-- <OperationButtons /> -->
     </div>

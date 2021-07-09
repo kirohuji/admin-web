@@ -15,7 +15,13 @@
       </DataSearchForm>
     </Card>
     <Card style="padding: 14px;padding-top: 0">
-      <DataTable v-bind="table" style="padding: 0" @change="tableData.refresh.call(tableData)">
+      <DataTable
+        ref="table"
+        v-loading="tableData.loading"
+        v-bind="table"
+        style="padding: 0"
+        @change="tableData.refresh.call(tableData)"
+      >
         <template v-slot:operation="{ row }">
           <div style="display: flex;justify-content: space-between;">
             <router-link :to="`/information/infomanage/edit/${row.id}`">

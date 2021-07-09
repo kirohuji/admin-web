@@ -31,7 +31,8 @@ export default {
         if (origin === 'https://login.dingtalk.com') {
           // eslint-disable-next-line no-unused-vars
           const loginTmpCode = event.data
-          // console.log('执行',loginTmpCode)
+          console.log('执行', loginTmpCode)
+          // debugger
           // debugger
           this.gotoByHref(loginTmpCode)
         }

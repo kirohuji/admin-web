@@ -126,7 +126,7 @@ export default {
       width: '300'
     },
     {
-      prop: 'description',
+      prop: 'describe',
       label: '角色描述'
     },
     {

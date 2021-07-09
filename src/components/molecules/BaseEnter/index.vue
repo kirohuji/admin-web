@@ -13,7 +13,7 @@
       <BaseTagSelect v-model="model[$attrs.prop]" />
     </template>
     <template v-if="$attrs.component === 'edit'">
-      <BaseEditor v-model="model[$attrs.prop]" />
+      <BaseEditor v-model="model[$attrs.prop]" v-bind="$attrs" />
     </template>
     <template v-if="$attrs.component === 'cascader'">
       <el-cascader v-model="model[$attrs.prop]" v-bind="$attrs" v-on="$listeners" />
@@ -54,7 +54,7 @@
     </template>
     <!-- 单选器-->
     <template v-else-if="$attrs.component === 'radio-group'">
-      <el-radio-group v-model="model[$attrs.prop]" v-bind="$attrs">
+      <el-radio-group v-model="model[$attrs.prop]" v-bind="$attrs" v-on="$listeners">
         <el-radio v-for="item in $attrs.options" :key="item.value" :label="item.value || item.label">
           {{ item.label }}
         </el-radio>
@@ -68,7 +68,7 @@ import { regionData } from 'element-china-area-data'
 import BaseImport from '@/vocationals/BaseImport'
 import BaseTagSelect from '@/vocationals/BaseTagSelect'
 import BaseSearch from '../BaseSearch'
-import BaseImageUpload from '../BaseImageUpload'
+import BaseImageUpload from '@/vocationals/BaseImageUpload'
 import BaseEditor from '../BaseEditor'
 export default {
   name: 'BaseEnter',

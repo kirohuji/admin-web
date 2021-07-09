@@ -5,6 +5,9 @@
       action="#"
       list-type="picture-card"
       :auto-upload="false"
+      :on-change="handleUpload"
+      :file-list="fileList"
+      :class="{ has_file: hasFile }"
     >
       <i slot="default" class="el-icon-plus" />
       <div slot="file" slot-scope="{ file }">
@@ -34,22 +37,40 @@ export default {
     return {
       dialogImageUrl: '',
       dialogVisible: false,
-      disabled: false
+      disabled: false,
+      fileList: []
+    }
+  },
+  computed: {
+    hasFile() {
+      return this.fileList.length >= 1
     }
   },
   methods: {
     handleRemove(file) {
-      console.log(file)
+      this.$refs.uploader.clearFiles()
+      this.fileList = []
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
+      console.log(file)
       this.dialogVisible = true
     },
     handleDownload(file) {
       console.log(file)
+    },
+    handleUpload(file) {
+      this.fileList.push(file)
+      console.log('handleUpload', file)
     }
   }
 }
 </script>
 
-<style></style>
+<style lang="scss">
+.has_file {
+    .el-upload.el-upload--picture-card {
+      display: none;
+    }
+}
+</style>

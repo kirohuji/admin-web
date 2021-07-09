@@ -17,6 +17,7 @@
     <Card style="padding: 14px;padding-top: 0">
       <DataTable
         ref="table"
+        v-loading="tableData.loading"
         v-bind="table"
         style="padding: 0"
         @change="tableData.refresh.call(tableData)"
@@ -24,15 +25,7 @@
         <template v-slot:operation="{ row }">
           <div style="display: flex;justify-content: space-around">
             <el-link type="primary" @click="handleUpdate(row)">编辑</el-link>
-            <el-link
-              type="primary"
-              @click="
-                () => {
-                  table.selected = row
-                  handleTrigger(row)
-                }
-              "
-            >{{ row.status === 'ban' ? '开启' : '禁用' }}</el-link>
+            <el-link type="primary" @click="handleTrigger(row)">{{ row.status === 'ban' ? '开启' : '禁用' }}</el-link>
           </div>
         </template>
       </DataTable>
@@ -42,14 +35,7 @@
       <template v-slot:footer>
         <div class="footer">
           <el-button @click="$refs.formDialog.close()">取消</el-button>
-          <el-button
-            type="primary"
-            @click="
-              () => {
-                handleSubmit()
-              }
-            "
-          >保存</el-button>
+          <el-button type="primary" @click="handleSubmit">保存</el-button>
         </div>
       </template>
     </BaseDialog>
@@ -76,11 +62,10 @@ export default {
   data() {
     return {
       dialog: {
-        mode: 'update',
-        title: '编辑用户'
+        mode: '',
+        title: ''
       },
       config: config,
-      node_id: 12,
       table: {
         selected: {},
         data: [],
@@ -101,24 +86,27 @@ export default {
       return {
         target: 'table.data',
         runner: service.find.bind(service),
-        variables: {
-          type: this.type,
-          node_id: this.node_id
+        variables: function() {
+          return {
+            type: this.type,
+            node_id: this.node_id
+          }
         },
-        callback: (res) => {
-          return res.list
-        },
+        callback: (res) => res.list,
         immediate: true
       }
     }
   },
   methods: {
     handleCreate() {
+      this.table.selected = {}
       this.dialog.title = '新建用户'
       this.dialog.mode = 'insert'
       this.$refs.formDialog.open()
+      this.$refs.dataForm && this.$refs.dataForm.resetFields()
     },
     handleUpdate(row) {
+      this.table.selected = {}
       this.dialog.mode = 'update'
       this.dialog.title = '编辑用户'
       service
@@ -129,6 +117,7 @@ export default {
         .then(({ data }) => {
           this.table.selected = data
           this.$refs.formDialog.open()
+          this.$refs.dataForm.resetFields()
         })
     },
     handleSubmit() {
@@ -163,6 +152,7 @@ export default {
       }
     },
     handleTrigger(row) {
+      this.table.selected = row
       service
         .delin({
           type: row.status === 'ban' ? 1 : 2,

@@ -1,9 +1,17 @@
 <template>
   <Card class="main-layout">
-    <MenusCard class="left" index="c_id" style="flex-grow: 1;" v-bind="dicmanage.menus" :is-edit="true" @click="handleMenu" />
+    <MenusCard
+      v-loading="menuData.loading"
+      class="left"
+      index="c_id"
+      style="flex-grow: 1;"
+      v-bind="dicmanage.menus"
+      :is-edit="true"
+      @click="handleMenu"
+    />
     <div style="flex-grow: 8;">
       <Card class="right" style="height: 700px;overflow-y:scroll;padding: 25px 20px">
-        <CreateCategoryButton @click="handleCreate" />
+        <CreateCategoryButton style="margin-bottom: 16px" @click="handleCreate" />
         <div class="dicmanager-banner">
           <div>字典名称</div>
           <div>备注</div>
@@ -123,11 +131,13 @@ export default {
         })
     },
     handleCreate() {
+      this.table.selected = {}
       this.dialog.title = '新建字典值类型'
       this.dialog.mode = 'insert'
       this.$refs.formDialog.open()
     },
     handleUpdate(row) {
+      this.table.selected = {}
       this.table.selected = row
       this.dialog.mode = 'update'
       this.dialog.title = '编辑字典值类型'

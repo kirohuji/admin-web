@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import Vue from 'vue'
 class Thenable {
   constructor({ vm, runner, variables, callback, immediate, data, target }) {
     this._watchers = []
@@ -19,12 +20,15 @@ class Thenable {
       this.defineReactiveSetter(key, key, true)
     }
   }
+  get loading() {
+    return this.result.loading
+  }
   init(data) {
-    this.result = {
+    this.result = Vue.observable({
       loading: true,
       error: false,
       data: data
-    }
+    })
   }
   destroy() {
     for (let _i = 0, _this$_watchers = this._watchers; _i < _this$_watchers.length; _i++) {

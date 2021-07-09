@@ -18,6 +18,7 @@ export default {
         placeholder: '请选择资讯分类',
         async: true,
         isReal: true,
+        clearable: true,
         props: {
           value: 'node_id',
           label: 'name',
@@ -37,6 +38,7 @@ export default {
         label: '状态',
         prop: 'status',
         component: 'select',
+        clearable: true,
         isReal: true,
         options: [
           {

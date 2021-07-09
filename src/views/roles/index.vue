@@ -15,7 +15,12 @@
       </DataSearchForm>
     </Card>
     <Card style="padding: 14px;padding-top: 0">
-      <DataTable v-bind="table" style="padding: 0" @change="tableData.refresh.call(tableData)">
+      <DataTable
+        v-loading="tableData.loading"
+        v-bind="table"
+        style="padding: 0"
+        @change="tableData.refresh.call(tableData)"
+      >
         <template v-slot:operation="{ row }">
           <div style="display: flex;justify-content: space-around">
             <el-link type="primary" @click="handleAuthorize(row)">授权</el-link>
@@ -25,22 +30,17 @@
         </template>
       </DataTable>
     </Card>
-    <BaseDialog ref="formDialog" v-bind="dialog" @close="handleFormDialogClose">
+    <!-- 表单新增/编辑对话框 -->
+    <BaseDialog ref="formDialog" v-bind="dialog">
       <DataForm ref="dataForm" :forms="config.form" label-position="right" :context="this" :data="table.selected" />
       <template v-slot:footer>
         <div class="footer">
-          <el-button @click="handleFormDialogClose">取消</el-button>
-          <el-button
-            type="primary"
-            @click="
-              () => {
-                handleSubmit()
-              }
-            "
-          >保存</el-button>
+          <el-button @click="$refs.formDialog.close()">取消</el-button>
+          <el-button type="primary" @click="handleSubmit">保存</el-button>
         </div>
       </template>
     </BaseDialog>
+    <!-- 授权对话框 -->
     <BaseDialog ref="authorizeDialog" title="角色授权" width="200">
       <AuthorizeLayout left="用户搜索" right="居民权限">
         <template v-slot:left>
@@ -53,14 +53,7 @@
       <template v-slot:footer>
         <div class="footer">
           <el-button @click="$refs.authorizeDialog.close()">取消</el-button>
-          <el-button
-            type="primary"
-            @click="
-              () => {
-                handleAuthorizeSubmit()
-              }
-            "
-          >保存</el-button>
+          <el-button type="primary" @click="handleAuthorizeSubmit">保存</el-button>
         </div>
       </template>
     </BaseDialog>
@@ -117,8 +110,6 @@ export default {
         member_node_list: []
       },
       config: config,
-      node_id: 0,
-      info: {},
       table: {
         selected: {},
         data: [],
@@ -161,25 +152,19 @@ export default {
       return {
         target: 'table.data',
         runner: service.find.bind(service),
-        variables: {
-          type: this.type,
-          node_id: this.node_id
+        variables: function() {
+          return {
+            type: this.type,
+            node_id: this.node_id
+          }
         },
-        callback: (res) => {
-          return res.list
-        },
+        callback: (res) => res.list,
         immediate: true
       }
     }
   },
   methods: {
-    handleFormDialogClose() {
-      this.table.selected = {}
-      this.$refs.formDialog.close()
-    },
     handleAuthorizeSubmit() {
-      console.log(this.$refs.rbacNodeList.getCheckedKeys())
-      console.log(this.$refs.memberNodeList.getCheckedKeys())
       service
         .setrbacrole({
           type: this.type,
@@ -204,12 +189,14 @@ export default {
       this.authorizeData.refresh()
     },
     handleCreate() {
+      this.table.selected = {}
       this.dialog.title = '新建角色'
       this.dialog.mode = 'insert'
       this.$refs.formDialog.open()
-      this.$refs.dataForm.resetFields()
+      this.$refs.dataForm && this.$refs.dataForm.resetFields()
     },
     handleUpdate(row) {
+      this.table.selected = {}
       this.dialog.mode = 'update'
       this.dialog.title = '编辑角色'
       service
@@ -218,7 +205,6 @@ export default {
           type: this.type
         })
         .then(({ data }) => {
-          // data.admin_arr = data.admin_arr.map((item) => item.user_id)
           this.table.selected = data
           this.$refs.formDialog.open()
           this.$refs.dataForm.resetFields()
