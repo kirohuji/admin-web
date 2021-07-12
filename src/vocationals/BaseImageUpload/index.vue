@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { service } from './service'
 export default {
   data() {
     return {
@@ -50,6 +51,7 @@ export default {
     handleRemove(file) {
       this.$refs.uploader.clearFiles()
       this.fileList = []
+      this.$emit('input', '')
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
@@ -59,9 +61,48 @@ export default {
     handleDownload(file) {
       console.log(file)
     },
-    handleUpload(file) {
-      this.fileList.push(file)
-      console.log('handleUpload', file)
+    urlToBase64(url) {
+      return new Promise((resolve, reject) => {
+        const image = new Image()
+        image.onload = function() {
+          const canvas = document.createElement('canvas')
+          canvas.width = this.naturalWidth
+          canvas.height = this.naturalHeight
+          // 将图片插入画布并开始绘制
+          canvas.getContext('2d').drawImage(image, 0, 0)
+          // result
+          const result = canvas.toDataURL('image/png')
+          resolve(result)
+        }
+        // CORS 策略，会存在跨域问题https://stackoverflow.com/questions/20424279/canvas-todataurl-securityerror
+        image.setAttribute('crossOrigin', 'Anonymous')
+        image.src = url
+        // 图片加载失败的错误处理
+        image.onerror = () => {
+          reject(new Error('转换失败'))
+        }
+      })
+    },
+    handleUpload(file, fileList) {
+      return this.urlToBase64(file.url).then((res) => {
+        service
+          .updatefile({
+            file: res.split(',')[1]
+          })
+          .then((res) => {
+            console.log('冲鸭')
+            this.fileList.push(file)
+            this.$emit('input', res.data.url)
+            return true
+          })
+          .catch(() => {
+            this.handleRemove()
+            return false
+          })
+      })
+    },
+    beforeUpload(res, file) {
+      console.log('发送')
     }
   }
 }
@@ -70,7 +111,7 @@ export default {
 <style lang="scss">
 .has_file {
     .el-upload.el-upload--picture-card {
-      display: none;
+        display: none;
     }
 }
 </style>

@@ -6,7 +6,7 @@
     </template>
     <!-- 上传器 -->
     <template v-if="$attrs.component === 'image'">
-      <BaseImageUpload />
+      <BaseImageUpload v-model="model[$attrs.prop]" v-bind="$attrs" />
     </template>
     <!-- 上传器 -->
     <template v-if="$attrs.component === 'tag-select'">

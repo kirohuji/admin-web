@@ -44,10 +44,23 @@
     <BaseDialog ref="authorizeDialog" title="角色授权" width="200">
       <AuthorizeLayout left="用户搜索" right="居民权限">
         <template v-slot:left>
-          <DataTree id="name" ref="rbacNodeList" :data="authorize.rbac_node_list" show-checkbox name="title" />
+          <DataTree
+            id="c_id"
+            ref="rbacNodeList"
+            :data="authorize.rbac_node_list"
+            show-checkbox
+            name="title"
+            :default-checked-keys="authorize.admin_role_info[0]"
+          />
         </template>
         <template v-slot:right>
-          <DataTree ref="memberNodeList" :data="authorize.member_node_list" show-checkbox />
+          <DataTree
+            id="node_id"
+            ref="memberNodeList"
+            :data="authorize.member_node_list"
+            show-checkbox
+            :default-checked-keys="authorize.admin_role_info[1]"
+          />
         </template>
       </AuthorizeLayout>
       <template v-slot:footer>
@@ -107,7 +120,8 @@ export default {
       },
       authorize: {
         rbac_node_list: [],
-        member_node_list: []
+        member_node_list: [],
+        admin_role_info: [[], []]
       },
       config: config,
       table: {
@@ -142,7 +156,11 @@ export default {
           }
         },
         callback: (res) => {
-          this.authorize = res
+          this.authorize = {
+            rbac_node_list: res.rbac_node_list,
+            member_node_list: res.member_node_list,
+            admin_role_info: res.admin_role_info === '' ? [[], []] : JSON.parse(res.admin_role_info)
+          }
           this.$refs.authorizeDialog.open()
         },
         immediate: false
@@ -154,8 +172,8 @@ export default {
         runner: service.find.bind(service),
         variables: function() {
           return {
-            type: this.type,
-            node_id: this.node_id
+            node_id: 12,
+            type: this.type
           }
         },
         callback: (res) => res.list,
@@ -169,15 +187,12 @@ export default {
         .setrbacrole({
           type: this.type,
           r_id: this.r_id,
-          rbac_node_arr: [
-            ...this.$refs.rbacNodeList.getCheckedKeys(),
-            ...this.$refs.rbacNodeList.getHalfCheckedKeys()
-          ].join(','),
-          member_node_arr: [
-            ...this.$refs.memberNodeList.getCheckedKeys(),
-            this.$refs.memberNodeList.getHalfCheckedKeys()
-          ].join(','),
-          admin_role_info: ''
+          rbac_node_arr: this.$refs.rbacNodeList.getCheckedKeys(true).join(','),
+          member_node_arr: this.$refs.memberNodeList.getCheckedKeys(true).join(','),
+          admin_role_info: JSON.stringify([
+            this.$refs.rbacNodeList.getCheckedKeys(true),
+            this.$refs.memberNodeList.getCheckedKeys(true)
+          ])
         })
         .then((res) => {
           this.$message.success('设置成功')

@@ -15,10 +15,15 @@ class Thenable {
       //   this.defineReactiveSetter(key, key, true)
       // }
       this.run()
+    } else {
+      this.result.loading = false
     }
     for (var key in this.variables) {
       this.defineReactiveSetter(key, key, true)
     }
+    // setTimeout(() => {
+    //   this.immediate = true
+    // }, 1000)
   }
   get loading() {
     return this.result.loading
@@ -46,7 +51,9 @@ class Thenable {
         func,
         function(value) {
           _this.variables[func] = value
-          _this.run()
+          if (_this.immediate) {
+            _this.run()
+          }
         },
         {
           immediate: false,
@@ -68,6 +75,9 @@ class Thenable {
       .then((res) => {
         _.set(this.vm, this.target, res)
         this.result.data = res
+        this.result.loading = false
+      })
+      .catch(() => {
         this.result.loading = false
       })
   }
@@ -238,6 +248,7 @@ function launch() {
     for (var key in thenable) {
       if (key.charAt(0) !== '$') {
         if (typeof thenable[key] === 'function') {
+          // debugger
           thenable[key] = new Thenable({
             vm: _this,
             ...thenable[key].call(_this)

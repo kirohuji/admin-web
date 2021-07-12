@@ -22,7 +22,7 @@
             <span>当前位置:</span>
             <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
           </div>
-          <RightTab :list="tab" @change="handleTabClick" />
+          <RightTabWithApi @change="handleTabClick" />
         </card>
       </app-main>
       <!-- <right-panel v-if="showSettings">
@@ -85,7 +85,7 @@ const RightTab = {
           }}
         >
           {this.list.map((item) => (
-            <el-tab-pane label={item.name} name={String(item.o_id)} />
+            <el-tab-pane label={item.name} name={String(item.type)} />
           ))}
         </el-tabs>
       </div>
@@ -93,27 +93,16 @@ const RightTab = {
   }
 }
 
-// const RightTabWithApi = {
-//   components: {
-//     Thenable
-//   },
-//   render() {
-//     return (
-//       <Thenable
-//         {...{
-//           props: {
-//             runner: service.gettablist.bind(service),
-//             default: [],
-//             callback: (data) => data.list
-//           },
-//           scopedSlots: {
-//             default: ({ result: { data }}) => <RightTab list={data} {...{ on: this.$listeners }} />
-//           }
-//         }}
-//       ></Thenable>
-//     )
-//   }
-// }
+const RightTabWithApi = {
+  computed: {
+    admin_role_arr() {
+      return JSON.parse(localStorage.getItem('user')).admin_role_arr
+    }
+  },
+  render() {
+    return <RightTab list={this.admin_role_arr} {...{ on: this.$listeners }} />
+  }
+}
 export default {
   name: 'Layout',
   provide() {
@@ -130,7 +119,8 @@ export default {
     // Settings,
     Sidebar,
     TagsView,
-    RightTab
+    RightTabWithApi
+    // RightTab
   },
   mixins: [ResizeMixin],
   data() {

@@ -78,7 +78,10 @@ export default {
       return this.layout.activeName
     },
     searcher() {
-      return this.$refs.dataSearchForm.model
+      return {
+        ...this.$refs.dataSearchForm.model,
+        node_id: this.$refs.dataSearchForm.model.node_id[0]
+      }
     }
   },
   thenable: {
@@ -89,7 +92,7 @@ export default {
         variables: function() {
           return {
             type: this.type,
-            node_id: this.node_id
+            node_id: 51
           }
         },
         callback: (res) => res.list,

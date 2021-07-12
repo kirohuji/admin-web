@@ -19,7 +19,7 @@ import load from './dynamicLoadScript'
 
 // why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
 const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js'
-
+import { service } from './service'
 export default {
   name: 'Tinymce',
   // components: { editorImage },
@@ -112,6 +112,28 @@ export default {
         this.initTinymce()
       })
     },
+    urlToBase64(url) {
+      return new Promise((resolve, reject) => {
+        const image = new Image()
+        image.onload = function() {
+          const canvas = document.createElement('canvas')
+          canvas.width = this.naturalWidth
+          canvas.height = this.naturalHeight
+          // 将图片插入画布并开始绘制
+          canvas.getContext('2d').drawImage(image, 0, 0)
+          // result
+          const result = canvas.toDataURL('image/png')
+          resolve(result)
+        }
+        // CORS 策略，会存在跨域问题https://stackoverflow.com/questions/20424279/canvas-todataurl-securityerror
+        image.setAttribute('crossOrigin', 'Anonymous')
+        image.src = url
+        // 图片加载失败的错误处理
+        image.onerror = () => {
+          reject(new Error('转换失败'))
+        }
+      })
+    },
     initTinymce() {
       const _this = this
       window.tinymce.init({
@@ -138,7 +160,29 @@ export default {
         images_upload_url: '/demo/upimg.php',
         images_upload_base_path: '/demo',
         images_upload_handler(blobInfo, success, failure, progress) {
-          success(window.URL.createObjectURL(blobInfo.blob()))
+          console.log('123')
+          _this.urlToBase64(window.URL.createObjectURL(blobInfo.blob())).then((res) => {
+            service
+              .updatefile({
+                file: res.split(',')[1]
+              })
+              .then((res) => {
+                success(res.data.url)
+              })
+              .catch(() => {
+                failure('文件上传失败，请重新上传，或者联系程序员')
+              })
+          })
+          // service
+          //   .updatefile({
+          //     file: window.URL.createObjectURL(blobInfo.blob())
+          //   })
+          //   .then((res) => {
+          //     success(res.data.url)
+          //   })
+          //   .catch(() => {
+          //     failure('文件上传失败，请重新上传，或者联系程序员')
+          //   })
           // progress(0)
           // window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" src="${blobInfo.blobUri()}" >`)
           // progress(100)

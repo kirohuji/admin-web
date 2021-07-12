@@ -13,11 +13,12 @@ export default {
       },
       {
         label: '所属机构',
-        prop: 'aduit',
+        prop: 'node_id',
         component: 'cascader',
         size: 'small',
         isReal: true,
         async: true,
+        default: 12,
         props: {
           value: 'node_id',
           label: 'name',

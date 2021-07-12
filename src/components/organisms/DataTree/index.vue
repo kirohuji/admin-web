@@ -16,11 +16,11 @@ export default {
   // eslint-disable-next-line vue/require-prop-types
   props: ['id', 'name'],
   methods: {
-    getCheckedKeys() {
-      return this.$refs.tree.getCheckedKeys()
+    getCheckedKeys(isLeaf) {
+      return this.$refs.tree.getCheckedKeys(isLeaf)
     },
-    getHalfCheckedKeys() {
-      return this.$refs.tree.getHalfCheckedKeys()
+    getHalfCheckedKeys(isLeaf) {
+      return this.$refs.tree.getHalfCheckedKeys(isLeaf)
     }
   }
 }

@@ -15,7 +15,7 @@ export class AuthService {
   getrbacnode() {
     return this.api.post(`${this.module}/c_admin/getrbacnode`)
   }
-  ossupload() {
-    return this.api.post(`${this.module}/c_admin/getrbacnode`)
+  updatefile(target) {
+    return this.api.post(`${this.module}/c_admin/updatefile`, target)
   }
 }
