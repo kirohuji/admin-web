@@ -8,6 +8,7 @@ import { PrpgdEduService } from '@/modules/prpgd_edu'
 import { ActiveService } from '@/modules/active'
 import { NewsService } from '@/modules/news'
 import { AuthService } from '@/modules/auth'
+import { PortraitService } from '@/modules/portrait'
 export const serviceContainer = {
   dicmanageService: new DicmanageService({ api }),
   organizationService: new OrganizationService({ api }),
@@ -17,5 +18,6 @@ export const serviceContainer = {
   prpgdEduService: new PrpgdEduService({ api }),
   activeService: new ActiveService({ api }),
   newService: new NewsService({ api }),
-  authService: new AuthService({ api })
+  authService: new AuthService({ api }),
+  portraitService: new PortraitService({ api })
 }

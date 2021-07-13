@@ -78,6 +78,29 @@ export const constantRoutes = [
     redirect: '/information/infomanage'
   },
   {
+    path: '/portrait',
+    component: Layout,
+    name: 'portrait',
+    alwaysShow: true,
+    meta: {
+      title: '画像中心',
+      icon: 'iconfont icon icon-zixunzhongxin-01',
+      code: 'portrait'
+    },
+    children: [
+      {
+        path: 'default',
+        redirect: 'portraitmanage'
+      },
+      {
+        path: 'portraitmanage',
+        component: () => import('@/views/portraitmanage/index'),
+        name: 'portraitmanage',
+        meta: { title: '画像管理', affix: true, code: 'portraitmanage' }
+      }
+    ]
+  },
+  {
     path: '/information',
     component: Layout,
     name: 'information',
