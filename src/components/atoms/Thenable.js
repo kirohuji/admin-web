@@ -10,13 +10,17 @@ export default {
     }
   },
   created() {
+    this.result.loading = true
     if (this.default) {
       this.result.data = this.default
     }
     if (this.runner) {
       this.runner(this.params)
         .then((res) => this.callback(res.data))
-        .then((res) => (this.result.data = res))
+        .then((res) => {
+          this.result.data = res
+          this.result.loading = false
+        })
     }
   },
   render() {

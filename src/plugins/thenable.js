@@ -5,25 +5,20 @@ class Thenable {
     this._watchers = []
     this.vm = vm
     this.runner = runner
-    this.variables = variables
     this.callback = callback
     this.immediate = immediate
+    this.listeners(variables)
     this.target = target
     this.init(data)
     if (this.immediate) {
-      // for (var key in this.variables) {
-      //   this.defineReactiveSetter(key, key, true)
-      // }
       this.run()
+      this.immediate = true
     } else {
       this.result.loading = false
     }
     for (var key in this.variables) {
       this.defineReactiveSetter(key, key, true)
     }
-    // setTimeout(() => {
-    //   this.immediate = true
-    // }, 1000)
   }
   get loading() {
     return this.result.loading
@@ -34,6 +29,16 @@ class Thenable {
       error: false,
       data: data
     })
+  }
+  listeners(variables) {
+    this.variables = variables
+    if (typeof this.variables === 'function') {
+      this.variablesIsFunction = this.variables
+      this.variables = variables.call(this.vm)
+    } else {
+      this.variablesIsFunction = variables
+      this.variables = variables
+    }
   }
   destroy() {
     for (let _i = 0, _this$_watchers = this._watchers; _i < _this$_watchers.length; _i++) {
@@ -67,8 +72,15 @@ class Thenable {
   }
   run(search = {}) {
     this.result.loading = true
+    let variables
+    if (typeof this.variablesIsFunction === 'function') {
+      variables = this.variablesIsFunction.call(this.vm)
+      this.variables = variables
+    } else {
+      variables = this.variables
+    }
     this.runner({
-      ...(typeof this.variables === 'function' ? this.variables.call(this.vm) : this.variables),
+      ...variables,
       ...search
     })
       .then((res) => this.callback.call(this.vm, res.data))

@@ -28,8 +28,7 @@ export default {
         size: 'small',
         isReal: true,
         async: true,
-        default: 12,
-        cached: 'aduit',
+        default: (context) => context.length && context[0].node_id,
         props: {
           value: 'node_id',
           label: 'name',

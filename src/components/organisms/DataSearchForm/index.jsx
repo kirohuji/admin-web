@@ -5,10 +5,10 @@ import Thenable from '@/components/atoms/Thenable'
 import './style.scss'
 const FormItem = {
   name: 'FormItem',
-  props: ['item', 'value', 'zValue','context'],
+  props: ['item', 'value', 'zValue', 'context'],
   watch: {
     zValue: {
-      handler() {
+      handler(val) {
         if (this.item.isReal) {
           this.$emit('search')
         }
@@ -31,18 +31,24 @@ const FormItem = {
                 ...this.item.options.call(this.vm)
               },
               scopedSlots: {
-                default: ({ result: { data }}) => (
-                  <BaseEnter
-                    {...{
-                      props: { model: this.value },
-                      attrs: {
-                        ...this.item,
-                        options: data
-                      },
-                      on: this.$listeners
-                    }}
-                  />
-                )
+                default: ({ result: { loading, data }}) => {
+                  if (!loading && typeof this.item.default === 'function') {
+                    this.value[this.item.prop] = [this.item.default(data)]
+                    this.item.default = null
+                  }
+                  return (
+                    <BaseEnter
+                      {...{
+                        props: { model: this.value },
+                        attrs: {
+                          ...this.item,
+                          options: data
+                        },
+                        on: this.$listeners
+                      }}
+                    />
+                  )
+                }
               }
             }}
           ></Thenable>
@@ -94,7 +100,9 @@ export default {
         'model',
         _.zipObject(
           this.forms.fields.map((n) => n.prop),
-          this.forms.fields.map((n) => _.defaultTo(n.default, ''))
+          this.forms.fields.map((n) => {
+            return typeof n.default !== 'function' && _.defaultTo(n.default, '')
+          })
         )
       )
     },

@@ -7,7 +7,7 @@
         :forms="config.search"
         label-position="right"
         style="justify-content: space-between;"
-        @search="() => tableData.refresh.call(tableData, $refs.dataSearchForm.model)"
+        @search="() => tableData.refresh.call(tableData, searcher)"
       >
         <template v-slot:right>
           <el-button @click="handleCreate">新建用户</el-button>
@@ -91,18 +91,19 @@ export default {
         runner: service.find.bind(service),
         variables: function() {
           return {
-            type: this.type,
-            node_id: 51
+            type: this.type
           }
         },
         callback: (res) => res.list,
-        immediate: true
+        immediate: false
       }
     }
   },
   methods: {
     handleCreate() {
-      this.table.selected = {}
+      this.table.selected = {
+        node_id: this.$refs.dataSearchForm.model.node_id[0]
+      }
       this.dialog.title = '新建用户'
       this.dialog.mode = 'insert'
       this.$refs.formDialog.open()
