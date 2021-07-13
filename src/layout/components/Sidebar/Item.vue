@@ -17,7 +17,7 @@ export default {
     const vnodes = []
 
     if (icon) {
-      if (icon.includes('el-icon')) {
+      if (icon.includes('el-icon') || icon.includes('iconfont ')) {
         vnodes.push(<i class={[icon, 'sub-el-icon']} style='font-size: 16px' />)
       } else {
         vnodes.push(<svg-icon icon-class={icon} style='font-size: 16px' />)
@@ -36,10 +36,18 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .sub-el-icon {
     color: currentColor;
     width: 1em;
     height: 1em;
+    font-size: 23px !important;
+    // margin: 0 9px !important;
+    color: #008dff !important;
+}
+.svg-icon {
+    color: #008dff !important;
+    font-size: 16px !important;
+    margin: 0 9px;
 }
 </style>

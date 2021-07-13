@@ -16,6 +16,11 @@ const FormItem = {
       deep: true
     }
   },
+  data() {
+    return {
+      isDefault: true
+    }
+  },
   render() {
     return (
       <ElFormItem
@@ -32,9 +37,9 @@ const FormItem = {
               },
               scopedSlots: {
                 default: ({ result: { loading, data }}) => {
-                  if (!loading && typeof this.item.default === 'function') {
+                  if (!loading && typeof this.item.default === 'function' && this.isDefault) {
                     this.value[this.item.prop] = [this.item.default(data)]
-                    this.item.default = null
+                    this.isDefault = false
                   }
                   return (
                     <BaseEnter

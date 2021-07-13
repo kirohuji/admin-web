@@ -22,7 +22,7 @@
             <span>当前位置:</span>
             <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
           </div>
-          <RightTabWithApi @change="handleTabClick" />
+          <RightTabWithApi />
         </card>
       </app-main>
       <!-- <right-panel v-if="showSettings">
@@ -49,15 +49,16 @@ const RightTab = {
       default: () => []
     }
   },
-  data() {
-    return {
-      activeName: 'second'
-    }
-  },
   methods: {
     handleClick(item) {
       localStorage.setItem('selectedTab', item.name)
-      this.$emit('change', item.name)
+      this.selectedTab = String(item.name)
+      this.$store.dispatch('user/changeTabs', item.name)
+    }
+  },
+  data() {
+    return {
+      selectedTab: ''
     }
   },
   mounted() {
@@ -66,9 +67,14 @@ const RightTab = {
         this.$store.dispatch('permission/generateRoutes', data.list)
       })
     }
-    this.activeName = localStorage.getItem('selectedTab')
-    if (!this.activeName) {
-      this.activeName = this.list[0].type
+    this.selectedTab = localStorage.getItem('selectedTab')
+    if (!this.selectedTab) {
+      this.handleClick({
+        label: this.list[0].name,
+        name: this.list[0].type
+      })
+    } else {
+      this.$store.dispatch('user/changeTabs', this.selectedTab)
     }
   },
   render() {
@@ -76,7 +82,7 @@ const RightTab = {
       <div style='display: flex;justify-content: center;align-items: center;'>
         <div style='margin: 0 20px;'>选择视角</div>
         <el-tabs
-          vModel={this.activeName}
+          vModel={this.selectedTab}
           class='app-main-tabs'
           {...{
             on: {
@@ -100,7 +106,7 @@ const RightTabWithApi = {
     }
   },
   render() {
-    return <RightTab list={this.admin_role_arr} {...{ on: this.$listeners }} />
+    return <RightTab list={this.admin_role_arr} />
   }
 }
 export default {
@@ -123,23 +129,6 @@ export default {
     // RightTab
   },
   mixins: [ResizeMixin],
-  data() {
-    return {
-      tab: [
-        {
-          o_id: 2,
-          name: '政府',
-          type: 'government'
-        },
-        {
-          o_id: 3,
-          name: '医疗',
-          type: 'medical'
-        }
-      ],
-      activeName: '2'
-    }
-  },
   computed: {
     ...mapState({
       sidebar: (state) => state.app.sidebar,
@@ -157,13 +146,8 @@ export default {
       }
     }
   },
-  mounted() {
-    this.activeName = localStorage.getItem('selectedTab')
-  },
+
   methods: {
-    handleTabClick(type) {
-      this.activeName = type
-    },
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
     }

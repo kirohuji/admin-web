@@ -83,7 +83,7 @@ export const constantRoutes = [
     name: 'information',
     meta: {
       title: '资讯中心',
-      icon: 'table',
+      icon: 'iconfont icon icon-zixunzhongxin-01',
       code: 'information'
     },
     children: [
@@ -95,7 +95,7 @@ export const constantRoutes = [
         path: 'infomanage',
         component: () => import('@/views/infomanage/index'),
         name: 'infomanage',
-        meta: { title: '资讯管理', icon: 'user', affix: true, code: 'infomanage' }
+        meta: { title: '资讯管理', affix: true, code: 'infomanage' }
       },
       {
         path: 'infomanage/edit/:id(\\d+)',
@@ -108,19 +108,19 @@ export const constantRoutes = [
         path: 'prpgd_edu',
         component: () => import('@/views/prpgd_edu/index'),
         name: 'prpgd_edu',
-        meta: { title: '宣教管理', icon: 'user', affix: true, code: 'prpgd_edu' }
+        meta: { title: '宣教管理', affix: true, code: 'prpgd_edu' }
       },
       {
         path: 'active',
         component: () => import('@/views/active/index'),
         name: 'active',
-        meta: { title: '活动管理', icon: 'user', affix: true, code: 'active' }
+        meta: { title: '活动管理', affix: true, code: 'active' }
       },
       {
         path: 'news',
         component: () => import('@/views/news/index'),
         name: 'news',
-        meta: { title: '消息管理', icon: 'user', affix: true, code: 'news' }
+        meta: { title: '消息管理', affix: true, code: 'news' }
       }
     ]
   },
@@ -130,7 +130,7 @@ export const constantRoutes = [
     name: 'person',
     meta: {
       title: '用户中心',
-      icon: 'table',
+      icon: 'iconfont icon-yonghuguanli-01',
       code: 'user'
     },
     children: [
@@ -142,13 +142,13 @@ export const constantRoutes = [
         path: 'users',
         component: () => import('@/views/users/index.vue'),
         name: 'users',
-        meta: { title: '用户管理', icon: 'user', affix: true, code: 'usermanage' }
+        meta: { title: '用户管理', affix: true, code: 'usermanage' }
       },
       {
         path: 'roles',
         component: () => import('@/views/roles/index'),
         name: 'roles',
-        meta: { title: '角色管理', icon: 'user', affix: true, code: 'rolemanage' }
+        meta: { title: '角色管理', affix: true, code: 'rolemanage' }
       }
     ]
   },
@@ -158,7 +158,7 @@ export const constantRoutes = [
     name: 'dictionaries',
     meta: {
       title: '机构维护',
-      icon: 'table',
+      icon: 'iconfont icon-jigouweihu-01',
       code: 'organization'
     },
     children: [
@@ -166,7 +166,7 @@ export const constantRoutes = [
         path: '/organmanage',
         component: () => import('@/views/organmanage/index'),
         name: 'organmanage',
-        meta: { title: '机构维护', icon: 'user', affix: true }
+        meta: { title: '机构维护', affix: true }
       }
     ]
   },
@@ -176,7 +176,7 @@ export const constantRoutes = [
     name: 'dictionaries',
     meta: {
       title: '字典管理',
-      icon: 'table',
+      icon: 'iconfont icon-zidianguanli-01',
       code: 'dictionaries'
     },
     children: [
@@ -184,7 +184,7 @@ export const constantRoutes = [
         path: '/dictionaries',
         component: () => import('@/views/dicmanage/index'),
         name: 'dicmanage',
-        meta: { title: '字典管理', icon: 'user', affix: true }
+        meta: { title: '字典管理', affix: true }
       }
     ]
   }

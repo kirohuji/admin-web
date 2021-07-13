@@ -219,8 +219,10 @@ export default {
       return {
         target: 'dicmanage.tree',
         runner: service.gettabtypedata.bind(service),
-        variables: {
-          c_id: this.c_id
+        variables: function() {
+          return {
+            c_id: this.c_id
+          }
         },
         callback: (data) => data.list,
         immediate: false

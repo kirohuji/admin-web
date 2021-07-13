@@ -76,8 +76,10 @@ export default {
       return {
         target: 'organmanage.tree',
         runner: service.gettabtypedata.bind(service),
-        variables: {
-          o_id: this.o_id
+        variables: function() {
+          return {
+            o_id: this.o_id
+          }
         },
         callback: (data) => data.list,
         immediate: false

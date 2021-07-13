@@ -82,6 +82,7 @@
 
     & .nest-menu .el-submenu>.el-submenu__title,
     & .el-submenu .el-menu-item {
+      padding-left: 52px !important;
       min-width: $sideBarWidth !important;
       background-color: $subMenuBg !important;
 
