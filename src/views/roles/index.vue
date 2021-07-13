@@ -7,7 +7,7 @@
         :forms="config.search"
         label-position="right"
         style="justify-content: space-between;"
-        @search="() => tableData.refresh.call(tableData, $refs.dataSearchForm.model)"
+        @search="() => tableData.refresh.call(tableData, searcher)"
       >
         <template v-slot:right>
           <el-button @click="handleCreate">新建角色</el-button>
@@ -136,7 +136,10 @@ export default {
       return this.layout.activeName
     },
     searcher() {
-      return this.$refs.dataSearchForm.model
+      return {
+        ...this.$refs.dataSearchForm.model,
+        node_id: this.$refs.dataSearchForm.model.node_id[0]
+      }
     },
     r_id() {
       return this.table.selected.r_id

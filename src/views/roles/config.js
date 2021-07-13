@@ -18,7 +18,7 @@ export default {
         size: 'small',
         isReal: true,
         async: true,
-        default: 12,
+        default: (context) => context.length && context[0].node_id,
         props: {
           value: 'node_id',
           label: 'name',
@@ -28,7 +28,7 @@ export default {
           return {
             runner: organizationService.gettabtypedata.bind(organizationService),
             params: {
-              o_id: localStorage.getItem('selectedTab')
+              o_id: localStorage.getItem('selectedTab') - 1
             },
             default: [],
             callback: (data) => deleteChildren(data.list)
