@@ -49,8 +49,8 @@ export default {
   },
   methods: {
     handleRemove(file) {
-      this.$refs.uploader.clearFiles()
       this.fileList = []
+      this.$refs.uploader.clearFiles()
       this.$emit('input', '')
     },
     handlePictureCardPreview(file) {
@@ -84,6 +84,7 @@ export default {
       })
     },
     handleUpload(file, fileList) {
+      this.fileList.push(file)
       return this.urlToBase64(file.url).then((res) => {
         service
           .updatefile({
@@ -91,7 +92,6 @@ export default {
           })
           .then((res) => {
             console.log('冲鸭')
-            this.fileList.push(file)
             this.$emit('input', res.data.url)
             return true
           })
