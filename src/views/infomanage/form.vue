@@ -34,7 +34,7 @@ export default {
       }
     },
     type() {
-      return this.layout.activeName
+      return this.$store.getters.selectedTab
     }
   },
   created() {
