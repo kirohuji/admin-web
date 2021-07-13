@@ -19,6 +19,7 @@ export default {
         async: true,
         isReal: true,
         clearable: true,
+        default: [],
         props: {
           value: 'node_id',
           label: 'name',
@@ -42,13 +43,12 @@ export default {
         isReal: true,
         options: [
           {
-            label: '上线中'
+            label: '上线中',
+            value: 1
           },
           {
-            label: '草稿'
-          },
-          {
-            label: '已下架'
+            label: '草稿',
+            value: 0
           }
         ]
       },

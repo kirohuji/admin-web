@@ -18,6 +18,7 @@ export default {
         placeholder: '请选择宣教分类',
         async: true,
         isReal: true,
+        default: [],
         props: {
           value: 'node_id',
           label: 'name',

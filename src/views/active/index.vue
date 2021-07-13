@@ -3,6 +3,7 @@
     <Card style="padding: 14px;padding-bottom: 0">
       <DataSearchForm
         ref="dataSearchForm"
+        :key="types"
         :forms="config.search"
         label-position="right"
         style="justify-content: space-between;"
@@ -74,7 +75,7 @@ export default {
   },
   computed: {
     types() {
-      return this.layout.activeName
+      return this.$store.getters.selectedTab
     },
     searcher() {
       return {

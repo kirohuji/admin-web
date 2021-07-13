@@ -18,6 +18,7 @@ export default {
         placeholder: '请选择活动分类',
         async: true,
         isReal: true,
+        default: [],
         props: {
           value: 'node_id',
           label: 'name',

@@ -72,11 +72,14 @@ export default {
     searcher() {
       return {
         ...this.$refs.dataSearchForm.model,
-        node_id: this.$refs.dataSearchForm.model.type.join(''),
+        node_id: this.$refs.dataSearchForm.model?.type.join(''),
         s_date: this.$refs.dataSearchForm.model.date && this.$refs.dataSearchForm.model.date[0],
         e_date: this.$refs.dataSearchForm.model.date && this.$refs.dataSearchForm.model.date[1]
       }
     }
+  },
+  mounted() {
+    console.log('资讯管理', this)
   },
   thenable: {
     tableData() {
