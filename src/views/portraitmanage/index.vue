@@ -7,7 +7,7 @@
         label-position="right"
         style="justify-content: space-between;"
         mode="search"
-        @search="() => tableData.refresh.call(tableData, searcher)"
+        @search="() => cardData.refresh.call(cardData, searcher)"
       >
         <template v-slot:right>
           <el-button type="primary" @click="$router.push(`/information/infomanage/edit/${0}`)">新建资讯</el-button>
@@ -28,8 +28,7 @@
         <div style="padding: 14px;">
           <span>{{ card.name }}</span>
           <div class="bottom clearfix">
-            <time class="time">{{ currentDate }}</time>
-            <el-button type="text" class="button">查看</el-button>
+            <el-button type="text" class="button" @click="goto(card.url)">查看</el-button>
           </div>
         </div>
       </el-card>
@@ -76,6 +75,10 @@ export default {
       }
     }
   },
-  methods: {}
+  methods: {
+    goto(url) {
+      window.open(url)
+    }
+  }
 }
 </script>

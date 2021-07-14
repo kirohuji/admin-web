@@ -58,7 +58,7 @@ export default {
           return {
             runner: organizationService.gettabtypedata.bind(organizationService),
             params: {
-              o_id: localStorage.getItem('selectedTab')
+              o_id: Number(localStorage.getItem('selectedTab')) - 1
             },
             default: [],
             callback: (data) => deleteChildren(data.list)
@@ -72,16 +72,19 @@ export default {
         type: 'input',
         placeholder: '卫健局',
         size: 'small',
+        rules: [{ required: true, message: '请输入角色名称', trigger: 'change' }],
         required: true
       },
       {
         label: '用户成员',
         prop: 'admin_arr',
         component: 'import',
+        required: true,
         props: {
           value: 'user_id',
           label: 'name'
         },
+        rules: [{ required: true, message: '请添加用户成员', trigger: 'change' }],
         multiple: true,
         size: 'small'
       },

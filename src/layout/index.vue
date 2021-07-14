@@ -22,7 +22,7 @@
             <span>当前位置:</span>
             <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
           </div>
-          <RightTabWithApi />
+          <!-- <RightTabWithApi /> -->
         </card>
       </app-main>
       <!-- <right-panel v-if="showSettings">
@@ -40,75 +40,75 @@ import { AppMain, Navbar, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
 // import Thenable from '@/components/atoms/Thenable'
-import { service } from './service'
+// import { service } from './service'
 
-const RightTab = {
-  props: {
-    list: {
-      type: Array,
-      default: () => []
-    }
-  },
-  methods: {
-    handleClick(item) {
-      localStorage.setItem('selectedTab', item.name)
-      this.selectedTab = String(item.name)
-      this.$store.dispatch('user/changeTabs', item.name)
-    }
-  },
-  data() {
-    return {
-      selectedTab: ''
-    }
-  },
-  mounted() {
-    if (localStorage.getItem('token')) {
-      service.getrbacnode().then(({ data }) => {
-        this.$store.dispatch('permission/generateRoutes', data.list)
-      })
-    }
-    this.selectedTab = localStorage.getItem('selectedTab')
-    if (!this.selectedTab) {
-      this.handleClick({
-        label: this.list[0].name,
-        name: this.list[0].type
-      })
-    } else {
-      this.$store.dispatch('user/changeTabs', this.selectedTab)
-    }
-  },
-  render() {
-    return (
-      <div style='display: flex;justify-content: center;align-items: center;'>
-        <div style='margin: 0 20px;'>选择视角</div>
-        <el-tabs
-          vModel={this.selectedTab}
-          class='app-main-tabs'
-          {...{
-            on: {
-              'tab-click': (item) => this.handleClick(item)
-            }
-          }}
-        >
-          {this.list.map((item) => (
-            <el-tab-pane label={item.name} name={String(item.type)} />
-          ))}
-        </el-tabs>
-      </div>
-    )
-  }
-}
+// const RightTab = {
+//   props: {
+//     list: {
+//       type: Array,
+//       default: () => []
+//     }
+//   },
+//   methods: {
+//     handleClick(item) {
+//       localStorage.setItem('selectedTab', item.name)
+//       this.selectedTab = String(item.name)
+//       this.$store.dispatch('user/changeTabs', item.name)
+//     }
+//   },
+//   data() {
+//     return {
+//       selectedTab: ''
+//     }
+//   },
+//   mounted() {
+//     if (localStorage.getItem('token')) {
+//       service.getrbacnode().then(({ data }) => {
+//         this.$store.dispatch('permission/generateRoutes', data.list)
+//       })
+//     }
+//     this.selectedTab = localStorage.getItem('selectedTab')
+//     if (!this.selectedTab) {
+//       this.handleClick({
+//         label: this.list[0].name,
+//         name: this.list[0].type
+//       })
+//     } else {
+//       this.$store.dispatch('user/changeTabs', this.selectedTab)
+//     }
+//   },
+//   render() {
+//     return (
+//       <div style='display: flex;justify-content: center;align-items: center;'>
+//         <div style='margin: 0 20px;'>选择视角</div>
+//         <el-tabs
+//           vModel={this.selectedTab}
+//           class='app-main-tabs'
+//           {...{
+//             on: {
+//               'tab-click': (item) => this.handleClick(item)
+//             }
+//           }}
+//         >
+//           {this.list.map((item) => (
+//             <el-tab-pane label={item.name} name={String(item.type)} />
+//           ))}
+//         </el-tabs>
+//       </div>
+//     )
+//   }
+// }
 
-const RightTabWithApi = {
-  computed: {
-    admin_role_arr() {
-      return JSON.parse(localStorage.getItem('user')).admin_role_arr
-    }
-  },
-  render() {
-    return <RightTab list={this.admin_role_arr} />
-  }
-}
+// const RightTabWithApi = {
+//   computed: {
+//     admin_role_arr() {
+//       return JSON.parse(localStorage.getItem('user')).admin_role_arr
+//     }
+//   },
+//   render() {
+//     return <RightTab list={this.admin_role_arr} />
+//   }
+// }
 export default {
   name: 'Layout',
   provide() {
@@ -124,8 +124,8 @@ export default {
     // RightPanel,
     // Settings,
     Sidebar,
-    TagsView,
-    RightTabWithApi
+    TagsView
+    // RightTabWithApi
     // RightTab
   },
   mixins: [ResizeMixin],

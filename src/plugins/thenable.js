@@ -85,7 +85,7 @@ class Thenable {
     })
       .then((res) => this.callback.call(this.vm, res.data))
       .then((res) => {
-        _.set(this.vm, this.target, res)
+        _.set(this.vm, this.target, _.assign(_.get(this.vm, this.target), res))
         this.result.data = res
         this.result.loading = false
       })

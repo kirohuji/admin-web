@@ -11,16 +11,17 @@
         @search="() => tableData.refresh.call(tableData, searcher)"
       >
         <template v-slot:right>
-          <el-button @click="handleCreate">新建角色</el-button>
+          <el-button type="primary" @click="handleCreate">新建角色</el-button>
         </template>
       </DataSearchForm>
     </Card>
     <Card style="padding: 14px;padding-top: 0">
       <DataTable
+        ref="table"
         v-loading="tableData.loading"
         v-bind="table"
         style="padding: 0"
-        @change="tableData.refresh.call(tableData)"
+        @change="tableData.refresh.call(tableData, searcher)"
       >
         <template v-slot:operation="{ row }">
           <div style="display: flex;justify-content: space-around">
@@ -103,7 +104,6 @@ const AuthorizeLayout = ({ props: { left, right }, scopedSlots }) => (
   </div>
 )
 export default {
-  inject: ['layout'],
   components: {
     Card,
     DataTable,
@@ -138,6 +138,7 @@ export default {
     },
     searcher() {
       return {
+        ...this.$refs.table.pagination,
         ...this.$refs.dataSearchForm.model,
         node_id: this.$refs.dataSearchForm.model.node_id[0]
       }
@@ -145,9 +146,6 @@ export default {
     r_id() {
       return this.table.selected.r_id
     }
-  },
-  created() {
-    console.log(this)
   },
   thenable: {
     authorizeData() {
@@ -172,16 +170,20 @@ export default {
     },
     tableData() {
       return {
-        target: 'table.data',
+        target: 'table',
         runner: service.find.bind(service),
         variables: function() {
           return {
-            node_id: 12,
             type: this.type
           }
         },
-        callback: (res) => res.list,
-        immediate: true
+        callback: (res) => {
+          return {
+            data: res.list,
+            total: res.total
+          }
+        },
+        immediate: false
       }
     }
   },
@@ -208,7 +210,9 @@ export default {
       this.authorizeData.refresh()
     },
     handleCreate() {
-      this.table.selected = {}
+      this.table.selected = {
+        node_id: this.$refs.dataSearchForm.model.node_id[0]
+      }
       this.dialog.title = '新建角色'
       this.dialog.mode = 'insert'
       this.$refs.formDialog.open()
@@ -246,7 +250,7 @@ export default {
               this.$message.success('编辑成功')
               this.table.selected = {}
               this.$refs.formDialog.close()
-              this.tableData.refresh()
+              this.tableData.refresh(this.searcher)
             })
           break
         case 'insert':
@@ -259,7 +263,7 @@ export default {
               this.$message.success('新建成功')
               this.table.selected = {}
               this.$refs.formDialog.close()
-              this.tableData.refresh()
+              this.tableData.refresh(this.searcher)
             })
           break
       }

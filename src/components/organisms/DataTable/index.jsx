@@ -1,13 +1,13 @@
 import './style.scss'
 export default {
-  props: ['column', 'data'],
+  props: ['column', 'data', 'total'],
   data: () => ({
     table: {},
     page: {
       layout: `total, sizes, prev, pager, next, jumper`,
       total: 0,
-      'page-sizes': [100, 200, 300, 400],
-      'page-size': 100,
+      'page-sizes': [10, 15, 30, 100],
+      'page-size': 10,
       background: false
     }
   }),
@@ -15,7 +15,7 @@ export default {
     pagination() {
       return {
         limit: this.page['page-size'],
-        page: this.$refs.pagination.currentPage,
+        page: this.$refs.pagination.internalCurrentPage,
         total: this.page.total
       }
     }
@@ -23,7 +23,7 @@ export default {
   watch: {
     data: {
       handler() {
-        this.page.total = this.data.length
+        this.page.total = this.total || this.data.length
       },
       immediate: true,
       deep: true
@@ -43,7 +43,7 @@ export default {
     return (
       <div class='data-table'>
         <ElTable
-          ref="table"
+          ref='table'
           data={this.data}
           {...{
             props: {

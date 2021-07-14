@@ -6,7 +6,7 @@ export default {
           background: '#fff'
         }}
       >
-        {this.$scopedSlots.default()}
+        {this.$scopedSlots.default && this.$scopedSlots.default()}
       </div>
     )
   }

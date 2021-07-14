@@ -11,7 +11,7 @@
         @search="() => tableData.refresh.call(tableData, searcher)"
       >
         <template v-slot:right>
-          <el-button @click="handleCreate">新建用户</el-button>
+          <el-button type="primary" @click="handleCreate">新建用户</el-button>
         </template>
       </DataSearchForm>
     </Card>
@@ -21,7 +21,7 @@
         v-loading="tableData.loading"
         v-bind="table"
         style="padding: 0"
-        @change="tableData.refresh.call(tableData)"
+        @change="tableData.refresh.call(tableData, searcher)"
       >
         <template v-slot:operation="{ row }">
           <div style="display: flex;justify-content: space-around">
@@ -52,7 +52,6 @@ import Card from '@/components/atoms/Card'
 import config from './config'
 import { service } from './service'
 export default {
-  inject: ['layout'],
   components: {
     Card,
     DataTable,
@@ -80,6 +79,7 @@ export default {
     },
     searcher() {
       return {
+        ...this.$refs.table.pagination,
         ...this.$refs.dataSearchForm.model,
         node_id: this.$refs.dataSearchForm.model.node_id[0]
       }
@@ -88,14 +88,19 @@ export default {
   thenable: {
     tableData() {
       return {
-        target: 'table.data',
+        target: 'table',
         runner: service.find.bind(service),
         variables: function() {
           return {
             type: this.type
           }
         },
-        callback: (res) => res.list,
+        callback: (res) => {
+          return {
+            data: res.list,
+            total: res.total
+          }
+        },
         immediate: false
       }
     }
@@ -129,7 +134,6 @@ export default {
       const form = this.$refs.dataForm.model
       switch (this.dialog.mode) {
         case 'update':
-          form.node_id = 12
           service
             .update({
               ...form,
@@ -138,11 +142,10 @@ export default {
             .then(() => {
               this.$message.success('编辑成功')
               this.$refs.formDialog.close()
-              this.tableData.refresh()
+              this.tableData.refresh(this.searcher)
             })
           break
         case 'insert':
-          form.node_id = 12
           service
             .insert({
               ...form,
@@ -151,7 +154,7 @@ export default {
             .then(() => {
               this.$message.success('新建成功')
               this.$refs.formDialog.close()
-              this.tableData.refresh()
+              this.tableData.refresh(this.searcher)
             })
           break
       }
@@ -166,7 +169,7 @@ export default {
         })
         .then(() => {
           this.$message.success('操作成功')
-          this.tableData.refresh()
+          this.tableData.refresh(this.searcher)
         })
     }
   }

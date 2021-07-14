@@ -133,7 +133,7 @@ export default {
                   data.tag_count = res.data.count
                   service.insert(data).then((res) => {
                     this.$message.success('复制成功')
-                    this.tableData.refresh()
+                    this.tableData.refresh(this.searcher)
                   })
                 })
             })
@@ -154,6 +154,7 @@ export default {
         .then(() => {
           service.remove(row).then((res) => {
             this.$message.success('删除成功')
+            this.tableData.refresh(this.searcher)
           })
         })
         .catch(() => {

@@ -64,7 +64,8 @@ export default {
         type: 'input',
         placeholder: '请输入内容',
         size: 'small',
-        required: true
+        required: true,
+        rules: [{ required: true, message: '请输入姓名', trigger: 'blur' }]
       },
       {
         label: '手机号',
@@ -72,7 +73,9 @@ export default {
         component: 'input',
         type: 'input',
         placeholder: '请输入内容',
-        size: 'small'
+        size: 'small',
+        required: true,
+        rules: [{ required: true, message: '请输入手机号', trigger: 'blur' }]
       },
       // {
       //   label: '钉钉账号',
@@ -90,6 +93,8 @@ export default {
         size: 'small',
         style: 'width: 598px',
         async: true,
+        required: true,
+        rules: [{ required: true, message: '请选择所属角色', trigger: 'blur' }],
         props: {
           value: 'node_id',
           label: 'name',
