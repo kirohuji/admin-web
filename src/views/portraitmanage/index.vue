@@ -21,10 +21,7 @@
         :body-style="{ padding: '0px' }"
         style="min-width: 320px;height:255px;margin: 24px;"
       >
-        <img
-          src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-          style="width: 100%;height:180px"
-        >
+        <img :src="require(`../../assets/${cards.map.get(card.name)}.png`)" style="width: 320px;height:180px">
         <div style="padding: 14px;">
           <span>{{ card.name }}</span>
           <div class="bottom clearfix">
@@ -50,6 +47,13 @@ export default {
     return {
       config: config,
       cards: {
+        map: new Map([
+          ['疫情多点预警', 'epidemicearlywarning'],
+          ['健康画像', 'healthyportrait'],
+          ['两慢监管', 'keygroups'],
+          ['就医行为分析', 'residentbehavior'],
+          ['红黄绿', 'ryg']
+        ]),
         selected: {},
         data: []
       }

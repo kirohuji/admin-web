@@ -18,10 +18,13 @@ export default {
         label: '用户搜索',
         prop: 'title',
         component: 'search',
-        placeholder: '根据标题名称、编号搜索',
+        placeholder: '根据姓名、手机号搜索',
         size: 'small'
       },
       {
+        isHide: function() {
+          return this.type === '1'
+        },
         label: '所属机构',
         prop: 'node_id',
         component: 'cascader',
