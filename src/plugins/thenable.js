@@ -85,7 +85,16 @@ class Thenable {
     })
       .then((res) => this.callback.call(this.vm, res.data))
       .then((res) => {
-        _.set(this.vm, this.target, _.merge(res, _.get(this.vm, this.target)))
+        // debugger
+        if (typeof res === 'object' && !Array.isArray(res)) {
+          const t = _.get(this.vm, this.target)
+          Object.keys(res).forEach((key) => {
+            t[key] = res[key]
+          })
+          _.set(this.vm, this.target, t)
+        } else {
+          _.set(this.vm, this.target, res)
+        }
         this.result.data = res
         this.result.loading = false
       })
