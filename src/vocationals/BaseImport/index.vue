@@ -3,24 +3,39 @@
     <el-select v-bind="$attrs" multiple collapse-tags placeholder="请选择" v-on="$listeners">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
-    <el-button type="primary" style="margin-left: 8px" @click="$refs.formDialog.open()">导入</el-button>
+    <el-button
+      type="primary"
+      style="margin-left: 8px"
+      @click="
+        () => {
+          $refs.formDialog.open()
+          key++
+        }
+      "
+    >导入</el-button>
     <BaseDialog ref="formDialog" title="用户导入" append-to-body :is-return="true">
       <Card style="padding: 14px;padding-bottom: 0">
         <DataSearchForm
-          :key="type"
+          :key="key"
           ref="dataSearchForm"
           mode="search"
           :forms="config.search"
           label-position="right"
           style="justify-content: space-between;"
           @search="() => tableData.refresh.call(tableData, searcher)"
-        />
+        >
+          <template v-slot:right>
+            <div />
+          </template>
+        </DataSearchForm>
       </Card>
       <Card style="padding: 14px;padding-top: 0">
         <DataTable
           ref="table"
+
           v-loading="tableData.loading"
           v-bind="table"
+          id-key="user_id"
           style="padding: 0"
           @change="tableData.refresh.call(tableData, searcher)"
         />
@@ -45,8 +60,9 @@
 <script>
 import BaseDialog from '@/components/molecules/BaseDialog.vue'
 import DataTable from '@/components/organisms/DataTable'
-import DataSearchForm from '@/components/organisms/DataSearchForm'
 import Card from '@/components/atoms/Card'
+// import DataSearchForm from '@/components/organisms/DataSearchForm'
+
 import config from './config'
 import { service } from './service'
 import _ from 'lodash'
@@ -54,13 +70,16 @@ export default {
   components: {
     Card,
     DataTable,
-    DataSearchForm,
+    DataSearchForm: () => import('@/components/organisms/DataSearchForm'),
+    // DataSearchForm,
     BaseDialog
   },
   data() {
     return {
       config: config,
       updated: true,
+      key: 1,
+      selectData: [],
       table: {
         selected: {},
         data: [],
@@ -83,11 +102,8 @@ export default {
     }
   },
   mounted() {
-    console.log('先报错')
+    this.change()
   },
-  // mounted() {
-  //   this.change()
-  // },
   thenable: {
     tableData() {
       return {
@@ -101,7 +117,12 @@ export default {
         callback: (res) => {
           return {
             data: res.list,
-            total: res.total
+            total: res.total,
+            selectData: this.$attrs.value.map((item) => {
+              return {
+                user_id: item
+              }
+            })
           }
         },
         immediate: false
@@ -131,7 +152,8 @@ export default {
       })
     },
     handleSubmit() {
-      const result = this.$refs.table.$refs.table.selection.map((item) => {
+      console.log(this.$refs.table.getAllSelectionData())
+      const result = this.$refs.table.multipleSelectionAll.map((item) => {
         return {
           label: item.name,
           value: item.user_id

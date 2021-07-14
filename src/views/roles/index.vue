@@ -189,12 +189,12 @@ export default {
   },
   methods: {
     handleAuthorizeSubmit() {
-      if (this.$refs.rbacNodeList.getCheckedKeys() === 0) {
-        this.$message.success('请选择用户权限')
+      if (this.$refs.rbacNodeList.getCheckedKeys().length === 0) {
+        this.$message.warning('请选择用户权限')
         return
       }
-      if (this.$refs.memberNodeList.getCheckedKeys() === 0) {
-        this.$message.success('请选择居民权限')
+      if (this.$refs.memberNodeList.getCheckedKeys().length === 0) {
+        this.$message.warning('请选择居民权限')
         return
       }
       service

@@ -94,7 +94,7 @@ export default {
     }
   },
   created() {
-    console.log('111')
+    console.log('1111')
     this.transform()
   },
   methods: {

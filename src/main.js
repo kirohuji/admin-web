@@ -16,7 +16,7 @@ import router from './router'
 import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
-import DataSearchForm from '@/components/organisms/DataSearchForm'
+// import DataSearchForm from '@/components/organisms/DataSearchForm'
 import * as filters from './filters' // global filters
 
 /**
@@ -37,7 +37,7 @@ Vue.use(Element, {
   // locale: enLang // 如果使用中文，无需设置，请删除
 })
 Vue.use(ThenableProvider)
-Vue.component('DataSearchForm', DataSearchForm)
+// Vue.component('DataSearchForm', DataSearchForm)
 // register global utility filters
 Object.keys(filters).forEach((key) => {
   Vue.filter(key, filters[key])
@@ -47,6 +47,7 @@ Vue.config.productionTip = false
 
 new Vue({
   el: '#app',
+  // components: { DataSearchForm },
   router,
   store,
   render: (h) => h(App)
