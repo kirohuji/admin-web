@@ -126,9 +126,10 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      console.log('退出')
+      localStorage.clear()
+      // console.log('退出')
       // await this.$store.dispatch('user/logout')
-      // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }
 }

@@ -71,6 +71,7 @@ const FormItem = {
   }
 }
 export default {
+  name: 'DataSearchForm',
   /**
      * 表单的加载事件
      */
@@ -93,6 +94,7 @@ export default {
     }
   },
   created() {
+    console.log('111')
     this.transform()
   },
   methods: {

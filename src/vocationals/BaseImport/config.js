@@ -4,7 +4,7 @@ const orgOptions = function() {
   return {
     runner: organizationService.gettabtypedata.bind(organizationService),
     params: {
-      o_id: localStorage.getItem('selectedTab')
+      o_id: localStorage.getItem('selectedTab') - 1
     },
     default: [],
     callback: (data) => deleteChildren(data.list)
@@ -23,12 +23,12 @@ export default {
       },
       {
         label: '所属机构',
-        prop: 'aduit',
+        prop: 'node_id',
         component: 'cascader',
         size: 'small',
         isReal: true,
         async: true,
-        cached: 'aduit',
+        default: (context) => context.length && context[0].node_id,
         props: {
           value: 'node_id',
           label: 'name',

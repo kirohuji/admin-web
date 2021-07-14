@@ -81,7 +81,7 @@ export default {
       return {
         ...this.$refs.table.pagination,
         ...this.$refs.dataSearchForm.model,
-        node_id: this.$refs.dataSearchForm.model.node_id[0]
+        node_id: this.$refs.dataSearchForm.model.node_id[this.$refs.dataSearchForm.model.node_id.length - 1]
       }
     }
   },
@@ -108,7 +108,7 @@ export default {
   methods: {
     handleCreate() {
       this.table.selected = {
-        node_id: this.$refs.dataSearchForm.model.node_id[0]
+        node_id: this.$refs.dataSearchForm.model.node_id[this.$refs.dataSearchForm.model.node_id.length - 1]
       }
       this.dialog.title = '新建用户'
       this.dialog.mode = 'insert'

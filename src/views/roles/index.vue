@@ -44,7 +44,7 @@
     </BaseDialog>
     <!-- 授权对话框 -->
     <BaseDialog ref="authorizeDialog" title="角色授权" width="200">
-      <AuthorizeLayout left="用户搜索" right="居民权限">
+      <AuthorizeLayout left="用户权限" right="居民权限">
         <template v-slot:left>
           <DataTree
             id="c_id"
@@ -140,7 +140,7 @@ export default {
       return {
         ...this.$refs.table.pagination,
         ...this.$refs.dataSearchForm.model,
-        node_id: this.$refs.dataSearchForm.model.node_id[0]
+        node_id: this.$refs.dataSearchForm.model.node_id[this.$refs.dataSearchForm.model.node_id.length - 1]
       }
     },
     r_id() {
@@ -189,6 +189,14 @@ export default {
   },
   methods: {
     handleAuthorizeSubmit() {
+      if (this.$refs.rbacNodeList.getCheckedKeys() === 0) {
+        this.$message.success('请选择用户权限')
+        return
+      }
+      if (this.$refs.memberNodeList.getCheckedKeys() === 0) {
+        this.$message.success('请选择居民权限')
+        return
+      }
       service
         .setrbacrole({
           type: this.type,
@@ -211,7 +219,7 @@ export default {
     },
     handleCreate() {
       this.table.selected = {
-        node_id: this.$refs.dataSearchForm.model.node_id[0]
+        node_id: this.$refs.dataSearchForm.model.node_id[this.$refs.dataSearchForm.model.node_id.length - 1]
       }
       this.dialog.title = '新建角色'
       this.dialog.mode = 'insert'
@@ -230,7 +238,7 @@ export default {
         .then(({ data }) => {
           this.table.selected = data
           this.$refs.formDialog.open()
-          this.$refs.dataForm.resetFields()
+          // this.$refs.dataForm.resetFields()
         })
     },
     handleSubmit() {

@@ -7,20 +7,23 @@
     <BaseDialog ref="formDialog" title="用户导入" append-to-body :is-return="true">
       <Card style="padding: 14px;padding-bottom: 0">
         <DataSearchForm
+          :key="type"
           ref="dataSearchForm"
           mode="search"
           :forms="config.search"
           label-position="right"
           style="justify-content: space-between;"
-          @search="() => tableData.refresh.call(tableData, $refs.dataSearchForm.model)"
-        >
-          <template v-slot:right>
-            <div />
-          </template>
-        </DataSearchForm>
+          @search="() => tableData.refresh.call(tableData, searcher)"
+        />
       </Card>
       <Card style="padding: 14px;padding-top: 0">
-        <DataTable ref="table" v-bind="table" style="padding: 0" @change="tableData.refresh.call(tableData)" />
+        <DataTable
+          ref="table"
+          v-loading="tableData.loading"
+          v-bind="table"
+          style="padding: 0"
+          @change="tableData.refresh.call(tableData, searcher)"
+        />
       </Card>
       <template v-slot:footer>
         <div class="footer">
@@ -69,31 +72,39 @@ export default {
   },
   computed: {
     type() {
-      return localStorage.getItem('selectedTab')
+      return this.$store.getters.selectedTab
     },
     searcher() {
-      return this.$refs.dataSearchForm.model
+      return {
+        ...this.$refs.table.pagination,
+        ...this.$refs.dataSearchForm.model,
+        node_id: this.$refs.dataSearchForm.model.node_id[0]
+      }
     }
   },
   mounted() {
-    this.change()
+    console.log('先报错')
   },
-  // updated() {
+  // mounted() {
   //   this.change()
   // },
   thenable: {
     tableData() {
       return {
-        target: 'table.data',
+        target: 'table',
         runner: service.find.bind(service),
-        variables: {
-          type: this.type,
-          node_id: 0
+        variables: function() {
+          return {
+            type: this.type
+          }
         },
         callback: (res) => {
-          return res.list
+          return {
+            data: res.list,
+            total: res.total
+          }
         },
-        immediate: true
+        immediate: false
       }
     }
   },
