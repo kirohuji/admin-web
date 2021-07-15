@@ -79,12 +79,12 @@ export default {
         label: '用户成员',
         prop: 'admin_arr',
         component: 'import',
-        // required: true,
+        required: true,
         props: {
           value: 'user_id',
           label: 'name'
         },
-        // rules: [{ required: true, message: '请添加用户成员', trigger: 'change' }],
+        rules: [{ required: true, message: '请添加用户成员', trigger: 'change' }],
         multiple: true,
         size: 'small'
       },
