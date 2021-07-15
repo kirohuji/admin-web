@@ -3,7 +3,7 @@
     <slot />
     <transition name="fade-transform" mode="out-in">
       <keep-alive :include="cachedViews">
-        <card style="min-height: calc(100vh - 124px);">
+        <card style="min-height: calc(100vh - 50px);">
           <router-view :key="key" />
         </card>
       </keep-alive>

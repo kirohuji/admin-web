@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Card style="padding: 14px;padding-bottom: 0">
+    <!-- <Card style="padding: 14px;padding-bottom: 0">
       <DataSearchForm
         ref="dataSearchForm"
         :forms="config.search"
@@ -13,8 +13,8 @@
           <el-button type="primary" @click="$router.push(`/information/infomanage/edit/${0}`)">新建资讯</el-button>
         </template>
       </DataSearchForm>
-    </Card>
-    <Card style="padding: 32px;padding-top: 0;display: flex;flex-wrap: wrap;justify-content: space-between;">
+    </Card> -->
+    <Card style="padding: 32px;padding-top: 0;display: flex;flex-wrap: wrap;justify-content: flex-start;">
       <el-card
         v-for="(card, index) in cards.data"
         :key="index"
@@ -34,14 +34,12 @@
 </template>
 
 <script>
-import DataSearchForm from '@/components/organisms/DataSearchForm'
 import Card from '@/components/atoms/Card'
 import config from './config'
 import { service } from './service'
 export default {
   components: {
-    Card,
-    DataSearchForm
+    Card
   },
   data() {
     return {

@@ -1,8 +1,10 @@
 import './style.scss'
+import _ from 'lodash'
 export default {
   props: ['column', 'data', 'total', 'idKey', 'selectData'],
   data: () => ({
     table: {},
+    // hasSelectData: false,
     multipleSelectionAll: [], // 所有选中的数据包含跨页数据
     multipleSelection: [], // 当前页选中的数据
     page: {
@@ -25,16 +27,15 @@ export default {
   watch: {
     selectData: {
       handler(val) {
-        console.log('执行', val)
-        this.multipleSelectionAll = val
-        this.setSelectRow()
-      },
-      immediate: true,
-      deep: true
+        if (val) {
+          this.multipleSelectionAll = val
+        }
+      }
     },
     data: {
       handler() {
         this.page.total = this.total || this.data.length
+        this.setSelectRow()
       },
       immediate: true,
       deep: true
@@ -42,6 +43,7 @@ export default {
   },
   methods: {
     changePageCoreRecordData() {
+      // debugger
       // 标识当前行的唯一键的名称
       const idKey = this.idKey
       const that = this
@@ -61,6 +63,7 @@ export default {
         selectIds.push(row[idKey])
         // 如果总选择里面不包含当前页选中的数据，那么就加入到总选择集合里
         if (selectAllIds.indexOf(row[idKey]) < 0) {
+          // debugger;
           that.multipleSelectionAll.push(row)
         }
       })
@@ -82,6 +85,8 @@ export default {
           }
         }
       })
+      this.setSelectRow()
+      return that.multipleSelectionAll
     },
     // 得到选中的所有数据
     getAllSelectionData() {

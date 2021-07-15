@@ -85,7 +85,8 @@ export const constantRoutes = [
     meta: {
       title: '画像中心',
       icon: 'iconfont icon icon-zixunzhongxin-01',
-      code: 'portrait'
+      code: 'portrait',
+      affix: true
     },
     children: [
       {

@@ -32,7 +32,6 @@
       <Card style="padding: 14px;padding-top: 0">
         <DataTable
           ref="table"
-
           v-loading="tableData.loading"
           v-bind="table"
           id-key="user_id"
@@ -58,7 +57,7 @@
 </template>
 
 <script>
-import BaseDialog from '@/components/molecules/BaseDialog.vue'
+import BaseDialog, { dialogVisibleMixin } from '@/components/molecules/BaseDialog.vue'
 import DataTable from '@/components/organisms/DataTable'
 import Card from '@/components/atoms/Card'
 // import DataSearchForm from '@/components/organisms/DataSearchForm'
@@ -74,11 +73,13 @@ export default {
     // DataSearchForm,
     BaseDialog
   },
+  mixins: [dialogVisibleMixin],
   data() {
     return {
       config: config,
       updated: true,
       key: 1,
+      hasSelectData: false,
       selectData: [],
       table: {
         selected: {},
@@ -101,6 +102,14 @@ export default {
       }
     }
   },
+  watch: {
+    dialogVisible(val) {
+      if (val) {
+        this.hasSelectData = false
+        this.change()
+      }
+    }
+  },
   mounted() {
     this.change()
   },
@@ -115,14 +124,26 @@ export default {
           }
         },
         callback: (res) => {
-          return {
-            data: res.list,
-            total: res.total,
-            selectData: this.$attrs.value.map((item) => {
-              return {
-                user_id: item
-              }
-            })
+          if (!this.hasSelectData) {
+            this.hasSelectData = true
+            return {
+              data: res.list,
+              total: res.total,
+              selectData: this.$attrs.value.map((item) => {
+                if (typeof item === 'object') {
+                  return item
+                } else {
+                  return {
+                    user_id: item
+                  }
+                }
+              })
+            }
+          } else {
+            return {
+              data: res.list,
+              total: res.total
+            }
           }
         },
         immediate: false
@@ -152,8 +173,7 @@ export default {
       })
     },
     handleSubmit() {
-      console.log(this.$refs.table.getAllSelectionData())
-      const result = this.$refs.table.multipleSelectionAll.map((item) => {
+      const result = this.$refs.table.changePageCoreRecordData().map((item) => {
         return {
           label: item.name,
           value: item.user_id

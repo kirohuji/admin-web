@@ -206,9 +206,11 @@ export default {
 
 <style lang="scss" scoped>
 .tags-view-container {
-    height: 40px;
+    height: 50px;
     width: 100%;
     padding: 0px;
+    margin-top: 16px;
+    margin-left: 12px;
     // background: #fff;
     // border-bottom: 1px solid #d8dce5;
     // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
@@ -218,24 +220,46 @@ export default {
             display: inline-block;
             position: relative;
             cursor: pointer;
-            height: 40px;
-            line-height: 40px;
-            width: 143px;
-            color: #495060;
+            height: 50px;
+            line-height: 38px;
+            width: 113px;
+            color: white !important;
             // background: #fff;
             text-align: center;
             padding: 0 8px;
             font-size: 12px;
+            background: #1684dd;
+            // .el-radio {
+            //     color: white !important;
+            // }
+            // .el-radio.is-checked {
+            //     .el-radio__label {
+            //         color: #666666 !important;
+            //     }
+            // }
             // margin-left: 5px;
             // margin-top: 4px;
             &:first-of-type {
                 // margin-left: 15px;
             }
+            ::v-deep .el-radio__label {
+                color: white !important;
+            }
+            .el-icon-close:hover {
+                color: white !important;
+            }
             &:last-of-type {
                 margin-right: 15px;
             }
             &.active {
+                .el-icon-close {
+                    color: #666666;
+                }
                 background-color: #fff;
+                color: #666666;
+                ::v-deep .el-radio__label {
+                    color: #666666 !important;
+                }
                 &::before {
                     background: #1684dd;
                 }
@@ -282,15 +306,18 @@ export default {
 </style>
 
 <style lang="scss">
+// .el-scrollbar__bar.is-horizontal {
+//       height: 0px !important;
+// }
 //reset element css of el-icon-close
 .tags-view-wrapper {
     .tags-view-item {
         .el-icon-close {
             position: absolute;
-            right: 8px;
-            top: 23%;
-            width: 16px;
-            height: 16px;
+            right: 1px;
+            top: 15%;
+            width: 20px;
+            height: 20px;
             font-size: 20px;
             vertical-align: 2px;
             border-radius: 50%;
@@ -300,7 +327,7 @@ export default {
             &:before {
                 transform: scale(0.6);
                 display: inline-block;
-                vertical-align: -3px;
+                vertical-align: 0px;
             }
             &:hover {
                 background-color: #b4bccc;

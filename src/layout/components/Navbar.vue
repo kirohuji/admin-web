@@ -6,7 +6,8 @@
       class="hamburger-container"
       @toggleClick="toggleSideBar"
     />
-    <div class="title">运营管理后台</div>
+    <div v-if="sidebar.opened" class="title">运营管理后台</div>
+    <tags-view v-if="needTagsView" />
     <div class="right-menu">
       <template v-if="device !== 'mobile'">
         <!-- <search id="header-search" class="right-menu-item" />
@@ -45,8 +46,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
+import { mapState } from 'vuex'
 import Hamburger from '@/components/Hamburger'
+import TagsView from './TagsView'
 import { service } from '../service'
 const RightTab = {
   props: {
@@ -112,11 +114,15 @@ const RightTabWithApi = {
 }
 export default {
   components: {
+    TagsView,
     Hamburger,
     RightTabWithApi
   },
   computed: {
     ...mapGetters(['sidebar', 'avatar', 'device']),
+    ...mapState({
+      needTagsView: (state) => state.settings.tagsView
+    }),
     user() {
       return JSON.parse(localStorage.getItem('user'))
     }
@@ -143,8 +149,9 @@ export default {
     position: relative;
     background: $menuActiveText;
     box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-
+    display: flex;
     .title {
+        width: 176px;
         font-size: 16px;
         font-weight: 400;
         line-height: 22px;

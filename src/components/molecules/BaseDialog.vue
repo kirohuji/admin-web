@@ -31,9 +31,23 @@
 </template>
 
 <script>
+export const dialogVisibleMixin = {
+  inject: ['reactiveDialogVisible'],
+  computed: {
+    dialogVisible() {
+      return this.reactiveDialogVisible()
+    }
+  }
+}
+
 export default {
   // eslint-disable-next-line vue/require-prop-types
   props: ['isReturn'],
+  provide() {
+    return {
+      reactiveDialogVisible: () => this.visible
+    }
+  },
   data() {
     return {
       visible: false

@@ -43,7 +43,7 @@
       </template>
     </BaseDialog>
     <!-- 授权对话框 -->
-    <BaseDialog ref="authorizeDialog" title="角色授权" width="200">
+    <BaseDialog ref="authorizeDialog" title="角色授权" width="200" class="authorizeDialog">
       <AuthorizeLayout left="用户权限" right="居民权限">
         <template v-slot:left>
           <DataTree
@@ -52,6 +52,7 @@
             :data="authorize.rbac_node_list"
             show-checkbox
             name="title"
+            default-expand-all
             :default-checked-keys="authorize.admin_role_info[0]"
           />
         </template>
@@ -140,7 +141,10 @@ export default {
       return {
         ...this.$refs.table.pagination,
         ...this.$refs.dataSearchForm.model,
-        node_id: this.$refs.dataSearchForm.model.node_id[this.$refs.dataSearchForm.model.node_id.length - 1]
+        node_id:
+                    String(this.type) === '1'
+                      ? '0'
+                      : this.$refs.dataSearchForm.model.node_id[this.$refs.dataSearchForm.model.node_id.length - 1]
       }
     },
     r_id() {
@@ -210,7 +214,8 @@ export default {
         })
         .then((res) => {
           this.$message.success('设置成功')
-          this.authorizeData.refresh()
+          // this.authorizeData.refresh()
+          this.$refs.authorizeDialog.close()
         })
     },
     handleAuthorize(row) {
@@ -319,5 +324,13 @@ export default {
         border: 1px solid rgba(198, 198, 198, 1);
     }
     // border: 1px solid rgba(229, 229, 229, 1);
+}
+</style>
+<style lang="scss">
+.authorizeDialog {
+    .el-dialog__body {
+        height: 600px;
+        overflow-y: auto;
+    }
 }
 </style>

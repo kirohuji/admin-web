@@ -81,7 +81,10 @@ export default {
       return {
         ...this.$refs.table.pagination,
         ...this.$refs.dataSearchForm.model,
-        node_id: this.$refs.dataSearchForm.model.node_id[this.$refs.dataSearchForm.model.node_id.length - 1]
+        node_id:
+                    String(this.type) === '1'
+                      ? '0'
+                      : this.$refs.dataSearchForm.model.node_id[this.$refs.dataSearchForm.model.node_id.length - 1]
       }
     }
   },
