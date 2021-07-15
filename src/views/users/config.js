@@ -97,7 +97,7 @@ export default {
         style: 'width: 598px',
         async: true,
         // required: true,
-        rules: [{ required: true, message: '请选择所属角色', trigger: 'blur' }],
+        // rules: [{ required: true, message: '请选择所属角色', trigger: 'blur' }],
         props: {
           value: 'node_id',
           label: 'name',
