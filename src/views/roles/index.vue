@@ -248,7 +248,7 @@ export default {
     },
     handleSubmit() {
       const form = _.cloneDeep(this.$refs.dataForm.model)
-      form.node_id = 12
+      // form.node_id = 12
       if (form.admin_arr) {
         form.admin_arr = form.admin_arr.join(',')
       }
