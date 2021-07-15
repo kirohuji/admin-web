@@ -77,7 +77,7 @@ const RightTab = {
     }
     this.selectedTab = localStorage.getItem('selectedTab')
     if (!this.selectedTab) {
-      this.handleClick(this.list[0].type)
+      this.handleClick(this.list[1].type)
     } else {
       this.$store.dispatch('user/changeTabs', this.selectedTab)
     }
