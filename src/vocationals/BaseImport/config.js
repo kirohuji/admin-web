@@ -15,7 +15,7 @@ export default {
     col: 0,
     fields: [
       {
-        label: '角色搜索',
+        label: '用户搜索',
         prop: 'title',
         component: 'search',
         placeholder: '根据标题名称、编号搜索',
