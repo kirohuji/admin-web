@@ -29,7 +29,7 @@
     justify-content: space-evenly;
     color: white"
         >
-          <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar">
+          <!-- <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar"> -->
           <!-- <i class="el-icon-caret-bottom" /> -->
           <div style="margin-left: 8px">{{ user.name }}</div>
         </div>
