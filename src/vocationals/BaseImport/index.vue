@@ -98,7 +98,7 @@ export default {
       return {
         ...this.$refs.table.pagination,
         ...this.$refs.dataSearchForm.model,
-        node_id: this.$refs.dataSearchForm.model.node_id[0]
+        node_id: this.$refs.dataSearchForm.model.node_id[this.$refs.dataSearchForm.model.node_id.length - 1]
       }
     }
   },
