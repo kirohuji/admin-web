@@ -1,11 +1,11 @@
 <template>
   <div class="navbar">
-    <hamburger
+    <!-- <hamburger
       id="hamburger-container"
       :is-active="sidebar.opened"
       class="hamburger-container"
       @toggleClick="toggleSideBar"
-    />
+    /> -->
     <div v-if="sidebar.opened" class="title">运营管理后台</div>
     <tags-view v-if="needTagsView" />
     <div class="right-menu">
@@ -47,7 +47,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { mapState } from 'vuex'
-import Hamburger from '@/components/Hamburger'
+// import Hamburger from '@/components/Hamburger'
 import TagsView from './TagsView'
 import { service } from '../service'
 const RightTab = {
@@ -115,7 +115,7 @@ const RightTabWithApi = {
 export default {
   components: {
     TagsView,
-    Hamburger,
+    // Hamburger,
     RightTabWithApi
   },
   computed: {
@@ -158,6 +158,7 @@ export default {
         color: #ffffff;
         height: 100%;
         display: flex;
+        justify-content: center;
         align-items: center;
         vertical-align: revert;
     }

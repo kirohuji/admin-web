@@ -1,7 +1,12 @@
 <template>
-  <div :class="{ 'has-logo': showLogo }">
+  <div :class="{ 'has-logo': showLogo }" style="display: flex;flex-direction: column;">
     <logo v-if="showLogo" :collapse="isCollapse" />
-
+    <hamburger
+      id="hamburger-container"
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         :default-active="activeMenu"
@@ -23,10 +28,11 @@
 import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
+import Hamburger from '@/components/Hamburger'
 import variables from '@/styles/variables.scss'
 // import { constantRoutes } from '@/router'
 export default {
-  components: { SidebarItem, Logo },
+  components: { SidebarItem, Logo, Hamburger },
   computed: {
     ...mapGetters(['sidebar', 'permission_routes']),
     activeMenu() {
@@ -47,6 +53,28 @@ export default {
     isCollapse() {
       return !this.sidebar.opened
     }
+  },
+  methods: {
+    toggleSideBar() {
+      this.$store.dispatch('app/toggleSideBar')
+    }
   }
 }
 </script>
+<style lang="scss" scoped>
+@import '~@/styles/variables.scss';
+
+.hamburger-container {
+    line-height: 46px;
+    // height: 100%;
+    float: left;
+    cursor: pointer;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
+    text-align: center;
+    border-bottom: 1px solid #EBEEF5;
+    &:hover {
+        background: rgba(0, 0, 0, 0.025);
+    }
+}
+</style>
