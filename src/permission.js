@@ -32,7 +32,6 @@ router.beforeEach(async(to, from, next) => {
     }
   } else if (to.query.code || localStorage.getItem('code')) {
     const code = to.query.code || localStorage.getItem('code')
-    localStorage.setItem('code', code)
     service
       .login({
         code
